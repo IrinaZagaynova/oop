@@ -68,4 +68,3 @@ REM If an error
 :err
 echo Test failed
 exit /B 1
-© 2020 GitHub, Inc.
