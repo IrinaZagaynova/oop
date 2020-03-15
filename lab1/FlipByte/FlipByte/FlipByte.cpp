@@ -13,7 +13,7 @@ unsigned char FlipByte(unsigned char& inputByte)
 	for (int i = 0; i < 8; ++i)
 	{
 		flipNumber <<= 1;
-		flipNumber = inputByte & 1 | flipNumber;
+		flipNumber |= inputByte & 1;
 		inputByte >>= 1;
 	}
 	return flipNumber;
