@@ -1,0 +1,1 @@
+An inverse matrix does not exist because the determinant is 0
