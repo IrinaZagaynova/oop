@@ -11,6 +11,7 @@
 
 using namespace std;
 const int MATRIX_DIMENSION = 3;
+//typedef array<array<double, MATRIX_DIMENSION>, MATRIX_DIMENSION> Matrix3x3;
 typedef double Matrix3x3[MATRIX_DIMENSION][MATRIX_DIMENSION];
 
 struct Args
@@ -81,7 +82,7 @@ bool ReadMatrix(const string& inputMatrix, Matrix3x3& matrix)
 	return true;
 }
 
-double CalculateDeterminant(const Matrix3x3 & matrix)
+double CalculateDeterminant(const Matrix3x3& matrix)
 {
 	double determinant;
 	determinant = matrix[0][0] * matrix[1][1] * matrix[2][2] - matrix[0][0] * matrix[1][2] * matrix[2][1]
