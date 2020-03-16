@@ -6,6 +6,7 @@
 #include <string> 
 #include <optional>
 #include <sstream>
+#include <array>
 #include <iomanip>
 
 using namespace std;
@@ -51,7 +52,7 @@ bool ReadMatrix(const string& inputMatrix, Matrix3x3& matrix)
 			break;
 		}
 		stringstream line(str);
-		while ((line >> matrix[lineNumber][columnNumber]))
+		while (line >> matrix[lineNumber][columnNumber])
 		{
 			columnNumber++;
 		}
@@ -80,38 +81,51 @@ bool ReadMatrix(const string& inputMatrix, Matrix3x3& matrix)
 	return true;
 }
 
-double СountDeterminant(const Matrix3x3& matrix, double& determinant)
+double CalculateDeterminant(const Matrix3x3 & matrix)
 {
+	double determinant;
 	determinant = matrix[0][0] * matrix[1][1] * matrix[2][2] - matrix[0][0] * matrix[1][2] * matrix[2][1]
 		        - matrix[0][1] * matrix[1][0] * matrix[2][2] + matrix[0][1] * matrix[1][2] * matrix[2][0]
 		        + matrix[0][2] * matrix[1][0] * matrix[2][1] - matrix[0][2] * matrix[1][1] * matrix[2][0];
 	return determinant;
 }
 
-void GetCofactorMatrix(const Matrix3x3& matrix, Matrix3x3 cofactorMatrix)
+void GetAdjugateMatrix(const Matrix3x3& matrix, Matrix3x3& adjugateMatrix)
 {
-	cofactorMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1];
-	cofactorMatrix[0][1] = -(matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]);
-	cofactorMatrix[0][2] = matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0];
-	cofactorMatrix[1][0] = -(matrix[0][1] * matrix[2][2] - matrix[0][2] * matrix[2][1]);
-	cofactorMatrix[1][1] = matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0];
-	cofactorMatrix[1][2] = -(matrix[0][0] * matrix[2][1] - matrix[0][1] * matrix[2][0]);
-	cofactorMatrix[2][0] = matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1];
-	cofactorMatrix[2][1] = -(matrix[0][0] * matrix[1][2] - matrix[0][2] * matrix[1][0]);
-	cofactorMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+	adjugateMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1];
+	adjugateMatrix[0][1] = -(matrix[0][1] * matrix[2][2] - matrix[0][2] * matrix[2][1]);
+	adjugateMatrix[0][2] = matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1];
+	adjugateMatrix[1][0] = -(matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]);
+	adjugateMatrix[1][1] = matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0];
+	adjugateMatrix[1][2] = -(matrix[0][0] * matrix[1][2] - matrix[0][2] * matrix[1][0]);
+	adjugateMatrix[2][0] = matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0];
+	adjugateMatrix[2][1] = -(matrix[0][0] * matrix[2][1] - matrix[0][1] * matrix[2][0]);
+	adjugateMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
 }
 
-void GetInvertibleMatrix(Matrix3x3 matrix, const Matrix3x3& adjugateMatrix, double determinant)
+bool GetInvertibleMatrix(Matrix3x3& matrix)
 {
+
+	double determinant;
+	determinant = CalculateDeterminant(matrix);
+	if (determinant == 0)
+	{
+		cout << "An inverse matrix does not exist because the determinant is 0\n";
+		return false;
+	}
+
+	Matrix3x3 adjugateMatrix;
+	GetAdjugateMatrix(matrix, adjugateMatrix);
 
 	for (int lineNumber = 0; lineNumber < MATRIX_DIMENSION; lineNumber++)
 	{
 		for (int columnNumber = 0; columnNumber < MATRIX_DIMENSION; columnNumber++)
 		{
-			matrix[columnNumber][lineNumber] = adjugateMatrix[lineNumber][columnNumber] / determinant;
-			matrix[lineNumber][columnNumber] = adjugateMatrix[columnNumber][lineNumber] / determinant;
+			matrix[lineNumber][columnNumber] = adjugateMatrix[lineNumber][columnNumber] / determinant;
 		}
 	}
+
+	return true;
 }
 
 void PrintMatrix(const Matrix3x3& matrix)
@@ -139,22 +153,14 @@ int main(int argc, char* argv[])
 	}
 
 	Matrix3x3 matrix;
-	if ((ReadMatrix(args->inputMatrix, matrix)) == false)
+	if (!ReadMatrix(args->inputMatrix, matrix))
 	{
 		return 1;
 	}
-
-	double determinant;
-	determinant = СountDeterminant(matrix, determinant);
-	if (determinant == 0)
+	if (!GetInvertibleMatrix(matrix))
 	{
-		cout << "An inverse matrix does not exist because the determinant is 0\n";
 		return 1;
 	}
-
-	Matrix3x3 cofactorMatrix;
-	GetCofactorMatrix(matrix, cofactorMatrix);
-    GetInvertibleMatrix(matrix, cofactorMatrix, determinant);
 	PrintMatrix(matrix);
 
 	return 0;
