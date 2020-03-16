@@ -11,7 +11,6 @@
 
 using namespace std;
 const int MATRIX_DIMENSION = 3;
-//typedef array<array<double, MATRIX_DIMENSION>, MATRIX_DIMENSION> Matrix3x3;
 typedef double Matrix3x3[MATRIX_DIMENSION][MATRIX_DIMENSION];
 
 struct Args
@@ -106,7 +105,6 @@ void GetAdjugateMatrix(const Matrix3x3& matrix, Matrix3x3& adjugateMatrix)
 
 bool GetInvertibleMatrix(Matrix3x3& matrix)
 {
-
 	double determinant;
 	determinant = CalculateDeterminant(matrix);
 	if (determinant == 0)
