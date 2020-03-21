@@ -41,11 +41,11 @@ echo Test 6 passed
 REM Encode more characters than byte size
 %Program% pack InputManyRepeatedCharacters.txt %temp%\Output.txt
 fc.exe Output.txt  %temp%\Output.txt || goto err
-echo Test 6 passed
+echo Test 7 passed
 
 REM Expect an error when unpacking an odd-sized file
 %Program% unpack OddSizedFile.txt %temp%\Output.txt && goto err
-echo Test8 passed
+echo Test 8 passed
  
 REM The tests were successful
 echo All tests passed successfuly
