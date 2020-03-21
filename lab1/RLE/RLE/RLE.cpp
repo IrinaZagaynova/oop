@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void PackData(istream& input, ostream& output)
+void RLECompression(istream& input, ostream& output)
 {
 	char character, previousCharacter;
 	int identicalBytesNumber = 1;
@@ -39,7 +39,7 @@ void PackData(istream& input, ostream& output)
 bool CheckFileSizeParity(istream& input)
 {
 	input.seekg(0, ios::end);
-	int fileSize = input.tellg();
+	int fileSize = (int)input.tellg();
 	input.seekg(0, ios::beg);
 
 	if (fileSize % 2 != 0)
@@ -50,7 +50,7 @@ bool CheckFileSizeParity(istream& input)
 	return true;
 }
 
- void UnpackData(istream& input, ostream& output)
+ void RLEDecompression(istream& input, ostream& output)
  {
 	 char character;
 	 uint8_t identicalBytesNumber;
@@ -66,7 +66,7 @@ bool CheckFileSizeParity(istream& input)
 	 }
  }
 
-bool OpenAndEncodingFiles(const string& inputFileName, const string& outputFileName, const string& action)
+bool PackFile(const string& inputFileName, const string& outputFileName)
 {
 	ifstream input;
 	input.open(inputFileName, ios_base::binary);
@@ -84,26 +84,7 @@ bool OpenAndEncodingFiles(const string& inputFileName, const string& outputFileN
 		return false;
 	}
 
-	if (action == "pack")
-	{
-		PackData(input, output);
-	}
-	else if (action == "unpack")
-	{
-		if (CheckFileSizeParity(input))
-		{
-			UnpackData(input, output);
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		cout << "The first command line parameter should be <pack> or <unpack>\n";
-		return false;
-	}
+	RLECompression(input, output);
 
 	if (input.bad())
 	{
@@ -120,9 +101,70 @@ bool OpenAndEncodingFiles(const string& inputFileName, const string& outputFileN
 	return true;
 }
 
-struct Args
+bool UnpackFile(const string& inputFileName, const string& outputFileName)
 {
-	string action;
+	ifstream input;
+	input.open(inputFileName, ios_base::binary);
+	if (!input.is_open())
+	{
+		cout << "Failed to open '" << inputFileName << "' for reading\n";
+		return false;
+	}
+
+	ofstream output;
+	output.open(outputFileName, ios_base::binary);
+	if (!output.is_open())
+	{
+		cout << "Failed to open '" << outputFileName << "' for writing\n";
+		return false;
+	}
+
+	if (!CheckFileSizeParity(input))
+	{
+		return false;
+	}
+	RLEDecompression(input, output);
+
+	if (input.bad())
+	{
+		cout << "Failed to read data from input file\n";
+		return false;
+	}
+
+	if (!output.flush())
+	{
+		cout << "Failed to write data to output file\n";
+		return false;
+	}
+
+	return true;
+}
+
+enum class Mode
+{
+	pack, unpack
+};
+
+bool DefineMode(const string& firstArg, Mode& mode)
+{
+	if (firstArg == "pack")
+	{
+		mode = Mode::pack;
+	}
+	else if (firstArg == "unpack")
+	{
+		mode = Mode::unpack;
+	}
+	else
+	{
+		cout << "The first command line parameter should be <pack> or <unpack>\n";
+		return false;
+	}
+	return true;
+}
+
+struct Args
+{ 
 	string inputFileName;
 	string outputFileName;
 };
@@ -136,9 +178,9 @@ optional<Args> ParseArgs(int argc, char* argv[])
 		return nullopt;
 	}
 	Args args;
-	args.action = argv[1];
 	args.inputFileName = argv[2];
 	args.outputFileName = argv[3];
+
 	return args;
 }
 
@@ -151,9 +193,25 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	if (!OpenAndEncodingFiles(args->inputFileName, args->outputFileName, args->action))
+	Mode mode;
+	string firstArg = argv[1];
+	if (!DefineMode(firstArg, mode))
 	{
 		return 1;
+	}
+	if (mode == Mode::pack)
+	{
+		if (!PackFile(args->inputFileName, args->outputFileName))
+		{
+			return 1;
+		}
+	}
+	else if (mode == Mode::unpack)
+	{
+		if (!UnpackFile(args->inputFileName, args->outputFileName))
+		{
+			return 1;
+		}
 	}
 
 	return 0;
