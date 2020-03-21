@@ -11,7 +11,7 @@
 
 using namespace std;
 const int MATRIX_DIMENSION = 3;
-typedef double Matrix3x3[MATRIX_DIMENSION][MATRIX_DIMENSION];
+typedef array<array<double, MATRIX_DIMENSION>, MATRIX_DIMENSION> Matrix3x3;
 
 struct Args
 {
@@ -52,8 +52,14 @@ bool ReadMatrix(const string& inputMatrix, Matrix3x3& matrix)
 			break;
 		}
 		stringstream line(str);
-		while (line >> matrix[lineNumber][columnNumber])
+		while (!line.eof())
 		{
+			if (columnNumber == MATRIX_DIMENSION)
+			{
+				correctMatrixSize = false;
+				break;
+			}
+			line >> matrix[lineNumber][columnNumber];
 			columnNumber++;
 		}
 		if (columnNumber != MATRIX_DIMENSION)
@@ -63,11 +69,7 @@ bool ReadMatrix(const string& inputMatrix, Matrix3x3& matrix)
 		}
 		lineNumber++;
 	}
-	if (lineNumber < MATRIX_DIMENSION)
-	{
-		correctMatrixSize = false;
-	}
-	if (!correctMatrixSize)
+	if (!correctMatrixSize || (lineNumber < MATRIX_DIMENSION))
 	{
 		cout << "Input must be a 3x3 dimensional matrix of numbers\n";
 		return false;
