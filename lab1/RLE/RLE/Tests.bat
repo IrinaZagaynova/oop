@@ -18,7 +18,7 @@ REM Expect an error when starting with missing file
 %Program% pack Text1.txt Text2.txt && goto err
 echo Test 2 passed
 
-REM Expect an error when the first command line argument does not <pack> or <unpack>
+REM Expect an error when the first command line argument does not pack or unpack
 %Program% word Input.txt %temp%\Output.txt && goto err
 echo Test 3 passed
 
