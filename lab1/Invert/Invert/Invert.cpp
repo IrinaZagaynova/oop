@@ -92,8 +92,9 @@ double CalculateDeterminant(const Matrix3x3& matrix)
 	return determinant;
 }
 
-void GetAdjugateMatrix(const Matrix3x3& matrix, Matrix3x3& adjugateMatrix)
+Matrix3x3 GetAdjugateMatrix(const Matrix3x3& matrix)
 {
+	Matrix3x3 adjugateMatrix;
 	adjugateMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1];
 	adjugateMatrix[0][1] = -(matrix[0][1] * matrix[2][2] - matrix[0][2] * matrix[2][1]);
 	adjugateMatrix[0][2] = matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1];
@@ -103,29 +104,34 @@ void GetAdjugateMatrix(const Matrix3x3& matrix, Matrix3x3& adjugateMatrix)
 	adjugateMatrix[2][0] = matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0];
 	adjugateMatrix[2][1] = -(matrix[0][0] * matrix[2][1] - matrix[0][1] * matrix[2][0]);
 	adjugateMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+	return adjugateMatrix;
 }
 
-bool GetInvertibleMatrix(Matrix3x3& matrix)
+Matrix3x3 DivideElementsOfMatrix(const Matrix3x3& adjugateMatrix, double determinant)
+{
+	Matrix3x3 resultMatrix;
+	for (int lineNumber = 0; lineNumber < MATRIX_DIMENSION; lineNumber++)
+	{
+		for (int columnNumber = 0; columnNumber < MATRIX_DIMENSION; columnNumber++)
+		{
+			resultMatrix[lineNumber][columnNumber] = adjugateMatrix[lineNumber][columnNumber] / determinant;
+		}
+	}
+	return resultMatrix;
+}
+
+bool InvertMatrix(Matrix3x3 matrix, Matrix3x3& resultMatrix)
 {
 	double determinant;
 	determinant = CalculateDeterminant(matrix);
 	if (determinant == 0)
 	{
-		cout << "An inverse matrix does not exist because the determinant is 0\n";
 		return false;
 	}
 
 	Matrix3x3 adjugateMatrix;
-	GetAdjugateMatrix(matrix, adjugateMatrix);
-
-	for (int lineNumber = 0; lineNumber < MATRIX_DIMENSION; lineNumber++)
-	{
-		for (int columnNumber = 0; columnNumber < MATRIX_DIMENSION; columnNumber++)
-		{
-			matrix[lineNumber][columnNumber] = adjugateMatrix[lineNumber][columnNumber] / determinant;
-		}
-	}
-
+	adjugateMatrix = GetAdjugateMatrix(matrix);
+	resultMatrix = DivideElementsOfMatrix(adjugateMatrix, determinant);
 	return true;
 }
 
@@ -158,11 +164,14 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	if (!GetInvertibleMatrix(matrix))
+
+	Matrix3x3 resultMatrix;
+	if (!InvertMatrix(matrix, resultMatrix))
 	{
+		cout << "An inverse matrix does not exist\n";
 		return 1;
 	}
-	PrintMatrix(matrix);
+	PrintMatrix(resultMatrix);
 
 	return 0;
 }
