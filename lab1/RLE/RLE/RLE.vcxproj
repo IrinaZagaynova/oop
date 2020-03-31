@@ -73,19 +73,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -173,9 +173,17 @@
   <ItemGroup>
     <Text Include="Empty.txt" />
     <Text Include="Input.txt" />
+    <Text Include="Input254.txt" />
+    <Text Include="Input255.txt" />
+    <Text Include="Input256.txt" />
+    <Text Include="Input257.txt" />
     <Text Include="InputManyRepeatedCharacters.txt" />
     <Text Include="OddSizedFile.txt" />
     <Text Include="Output.txt" />
+    <Text Include="Output254.txt" />
+    <Text Include="Output255.txt" />
+    <Text Include="Output256.txt" />
+    <Text Include="Output257.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests.bat" />

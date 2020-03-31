@@ -20,6 +20,14 @@
     <Text Include="Empty.txt" />
     <Text Include="OddSizedFile.txt" />
     <Text Include="InputManyRepeatedCharacters.txt" />
+    <Text Include="Input255.txt" />
+    <Text Include="Output255.txt" />
+    <Text Include="Input254.txt" />
+    <Text Include="Output254.txt" />
+    <Text Include="Input256.txt" />
+    <Text Include="Input257.txt" />
+    <Text Include="Output256.txt" />
+    <Text Include="Output257.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests.bat">

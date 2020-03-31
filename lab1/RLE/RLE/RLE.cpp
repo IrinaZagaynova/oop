@@ -5,35 +5,73 @@
 #include <fstream>
 #include <string> 
 #include <optional>
+#include <functional>
 
 using namespace std;
 
-void RLECompression(istream& input, ostream& output)
+using StreamProcessor = function<bool(istream& input, ostream& output)>;
+
+struct RLEChunk
 {
-	char character, previousCharacter;
-	int identicalBytesNumber = 1;
-	input.get(character);
-	previousCharacter = character;
-	if (input.eof())
+	char ch;
+	uint8_t counter = 0;
+};
+
+bool FlushChunk(RLEChunk& chunk, ostream& output)
+{
+	if (!output.put(chunk.counter))
 	{
-		return;
+		return false; 
 	}
-	while (input.get(character))
+
+	if (!output.put(static_cast<uint8_t>(chunk.ch)))
 	{
-		if ((previousCharacter == character) && (identicalBytesNumber != 255))
-		{
-			identicalBytesNumber++;
-		}
-		else
-		{
-			output << static_cast<uint8_t>(identicalBytesNumber);
-			output << static_cast<uint8_t>(previousCharacter);
-			identicalBytesNumber = 1;
-		}
-		previousCharacter = character;
+		return false;
 	}
-	output << static_cast<uint8_t>(identicalBytesNumber);
-	output << static_cast<uint8_t>(previousCharacter);
+
+	return true;
+}
+
+bool CompressChar(char ch, RLEChunk& chunk, ostream& output)
+{
+	if (chunk.counter == 0)
+	{
+		chunk.ch = ch;
+	}
+
+	if ((chunk.ch == ch) && (chunk.counter < 255))
+	{
+		chunk.counter++;
+	}
+	else
+	{
+		if (!FlushChunk(chunk, output))
+		{
+			return false;
+		}
+		chunk.counter = 0;
+	}
+
+	return true;
+}
+
+bool RLECompression(istream& input, ostream& output)
+{
+	char ch;
+	RLEChunk chunk;
+	while (input.get(ch))
+	{
+		if (!CompressChar(ch, chunk, output))
+		{
+			return false;
+		}
+	}
+	if (chunk.counter != 0)
+	{
+		FlushChunk(chunk, output);
+	}
+
+	return true;
 }
 
 bool CheckFileSizeParity(istream& input)
@@ -47,11 +85,17 @@ bool CheckFileSizeParity(istream& input)
 		cout << "Input file cannot be unpacked because it has an odd size\n";
 		return false;
 	}
+
 	return true;
 }
 
- void RLEDecompression(istream& input, ostream& output)
+ bool RLEDecompression(istream& input, ostream& output)
  {
+	 if (!CheckFileSizeParity(input))
+	 {
+		 return false;
+	 }
+
 	 char character;
 	 uint8_t identicalBytesNumber;
 	 while (input.get(character))
@@ -64,9 +108,11 @@ bool CheckFileSizeParity(istream& input)
 			 identicalBytesNumber--;
 		 }
 	 }
+
+	 return true;
  }
 
-bool PackFile(const string& inputFileName, const string& outputFileName)
+bool ProcessFiles(string const& inputFileName, string const& outputFileName, StreamProcessor processStreams)
 {
 	ifstream input;
 	input.open(inputFileName, ios_base::binary);
@@ -84,46 +130,10 @@ bool PackFile(const string& inputFileName, const string& outputFileName)
 		return false;
 	}
 
-	RLECompression(input, output);
-
-	if (input.bad())
-	{
-		cout << "Failed to read data from input file\n";
-		return false;
-	}
-
-	if (!output.flush())
-	{
-		cout << "Failed to write data to output file\n";
-		return false;
-	}
-
-	return true;
-}
-
-bool UnpackFile(const string& inputFileName, const string& outputFileName)
-{
-	ifstream input;
-	input.open(inputFileName, ios_base::binary);
-	if (!input.is_open())
-	{
-		cout << "Failed to open '" << inputFileName << "' for reading\n";
-		return false;
-	}
-
-	ofstream output;
-	output.open(outputFileName, ios_base::binary);
-	if (!output.is_open())
-	{
-		cout << "Failed to open '" << outputFileName << "' for writing\n";
-		return false;
-	}
-
-	if (!CheckFileSizeParity(input))
+	if (!processStreams(input, output))
 	{
 		return false;
 	}
-	RLEDecompression(input, output);
 
 	if (input.bad())
 	{
@@ -145,28 +155,11 @@ enum class Mode
 	pack, unpack
 };
 
-bool DefineMode(const string& firstArg, Mode& mode)
-{
-	if (firstArg == "pack")
-	{
-		mode = Mode::pack;
-	}
-	else if (firstArg == "unpack")
-	{
-		mode = Mode::unpack;
-	}
-	else
-	{
-		cout << "The first command line parameter should be <pack> or <unpack>\n";
-		return false;
-	}
-	return true;
-}
-
 struct Args
-{ 
+{
 	string inputFileName;
 	string outputFileName;
+	Mode mode;
 };
 
 optional<Args> ParseArgs(int argc, char* argv[])
@@ -178,8 +171,22 @@ optional<Args> ParseArgs(int argc, char* argv[])
 		return nullopt;
 	}
 	Args args;
+	string firstArg = argv[1];
 	args.inputFileName = argv[2];
 	args.outputFileName = argv[3];
+
+	if (firstArg == "pack")
+	{
+		args.mode = Mode::pack;
+	}
+	else if (firstArg == "unpack")
+	{
+		args.mode = Mode::unpack;
+	}
+	else
+	{
+		return nullopt;
+	}
 
 	return args;
 }
@@ -193,22 +200,16 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	Mode mode;
-	string firstArg = argv[1];
-	if (!DefineMode(firstArg, mode))
+	if (args->mode == Mode::pack)
 	{
-		return 1;
-	}
-	if (mode == Mode::pack)
-	{
-		if (!PackFile(args->inputFileName, args->outputFileName))
+		if (!ProcessFiles(args->inputFileName, args->outputFileName, RLECompression))
 		{
 			return 1;
 		}
 	}
-	else if (mode == Mode::unpack)
+	else
 	{
-		if (!UnpackFile(args->inputFileName, args->outputFileName))
+		if (!ProcessFiles(args->inputFileName, args->outputFileName, RLEDecompression))
 		{
 			return 1;
 		}
