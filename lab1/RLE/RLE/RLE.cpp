@@ -23,12 +23,10 @@ bool FlushChunk(RLEChunk& chunk, ostream& output)
 	{
 		return false; 
 	}
-
 	if (!output.put(static_cast<uint8_t>(chunk.ch)))
 	{
 		return false;
 	}
-
 	return true;
 }
 
@@ -38,7 +36,6 @@ bool CompressChar(char ch, RLEChunk& chunk, ostream& output)
 	{
 		chunk.ch = ch;
 	}
-
 	if ((chunk.ch == ch) && (chunk.counter < 255))
 	{
 		chunk.counter++;
@@ -51,7 +48,6 @@ bool CompressChar(char ch, RLEChunk& chunk, ostream& output)
 		}
 		chunk.counter = 0;
 	}
-
 	return true;
 }
 
@@ -70,7 +66,6 @@ bool RLECompression(istream& input, ostream& output)
 	{
 		FlushChunk(chunk, output);
 	}
-
 	return true;
 }
 
@@ -79,13 +74,11 @@ bool CheckFileSizeParity(istream& input)
 	input.seekg(0, ios::end);
 	int fileSize = (int)input.tellg();
 	input.seekg(0, ios::beg);
-
 	if (fileSize % 2 != 0)
 	{
 		cout << "Input file cannot be unpacked because it has an odd size\n";
 		return false;
 	}
-
 	return true;
 }
 
@@ -95,7 +88,6 @@ bool CheckFileSizeParity(istream& input)
 	 {
 		 return false;
 	 }
-
 	 char character;
 	 uint8_t identicalBytesNumber;
 	 while (input.get(character))
@@ -108,7 +100,6 @@ bool CheckFileSizeParity(istream& input)
 			 identicalBytesNumber--;
 		 }
 	 }
-
 	 return true;
  }
 
@@ -193,8 +184,7 @@ optional<Args> ParseArgs(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    auto args = ParseArgs(argc, argv);
-
+	auto args = ParseArgs(argc, argv);
 	if (!args)
 	{
 		return 1;
