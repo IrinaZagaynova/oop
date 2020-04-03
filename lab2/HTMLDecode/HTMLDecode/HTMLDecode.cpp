@@ -12,4 +12,6 @@ int main()
     {
         std::cout << DecodeString(inputStr) << "\n";
     }
+    
+    return 0;
 }
