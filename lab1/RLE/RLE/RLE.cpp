@@ -158,7 +158,7 @@ optional<Args> ParseArgs(int argc, char* argv[])
 	if (argc != 4)
 	{
 		cout << "Invalid arguments count\n";
-		cout << "Usage: compare.exe <action> <input file> <output file>\n";
+		cout << "Usage: rle.exe <action> <input file> <output file>\n";
 		return nullopt;
 	}
 	Args args;
