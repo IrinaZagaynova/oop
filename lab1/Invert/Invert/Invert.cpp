@@ -23,7 +23,7 @@ optional<Args> ParseArgs(int argc, char* argv[])
 	if (argc != 2)
 	{
 		cout << "Invalid arguments count\n";
-		cout << "Usage: compare.exe <input file>\n";
+		cout << "Usage: invert.exe <input file>\n";
 		return nullopt;
 	}
 	Args args;
