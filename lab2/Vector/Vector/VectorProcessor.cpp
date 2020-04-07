@@ -10,13 +10,17 @@ void ProcessVector(vector<double>& numbers)
 	{
 		return;
 	}
-	double minElenentValue = *min_element(numbers.begin(), numbers.end());
-	double maxElenentValue = *max_element(numbers.begin(), numbers.end());
-	for (int i = 0; i < numbersSize; i++)
-	{
-		if (numbers[i] < 0)
+
+	const auto result = std::minmax_element(numbers.begin(), numbers.end());
+
+	auto MultiplyNegativeElementByMinAndMax = [result](double& number) {
+		if (number < 0)
 		{
-			numbers[i] = numbers[i] * minElenentValue * maxElenentValue;
+			number = number * *result.first * *result.second;
 		}
-	}
+		return number;
+	};
+
+	std::transform(numbers.begin(), numbers.end(), numbers.begin(), MultiplyNegativeElementByMinAndMax);
+
 }
