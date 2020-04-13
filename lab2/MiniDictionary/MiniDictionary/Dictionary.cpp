@@ -1,10 +1,10 @@
 #include "Dictionary.h"
 
-void FillInDictionaryFromFile(std::istream& streamInputDictionaryFile, Dictionary& dictionary)
+void FillInDictionaryFromFile(std::istream& dictionaryFile, Dictionary& dictionary)
 {
 	std::string line;
 	std::string translation;
-	while (getline(streamInputDictionaryFile, line) && getline(streamInputDictionaryFile, translation))
+	while (getline(dictionaryFile, line) && getline(dictionaryFile, translation))
 	{
 		transform(line.begin(), line.end(), line.begin(), tolower);
 		dictionary.emplace(line, translation);
@@ -35,10 +35,10 @@ bool TranslateLine(std::string line, std::string& translation, Dictionary dictio
 	return false;
 }
 
-void SaveDictionaryToFile(const Dictionary& dictionary, std::ostream& streamOutputDictionaryFile)
+void SaveDictionaryToFile(const Dictionary& dictionary, std::ostream& dictionaryFile)
 {
 	for (auto& line : dictionary)
 	{
-		streamOutputDictionaryFile << line.first << "\n" << line.second << "\n";
+		dictionaryFile << line.first << "\n" << line.second << "\n";
 	}
 }

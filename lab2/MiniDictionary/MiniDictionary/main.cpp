@@ -12,8 +12,7 @@ bool ConfirmSavingDictionaryToFile(const Dictionary& dictionary, const std::stri
 	if ((line == "Y") || (line == "y"))
 	{
 		std::ofstream dictionaryFile(dictionaryFileName);
-		std::ostream& streamOutputDictionaryFile = dictionaryFile;
-		SaveDictionaryToFile(dictionary, streamOutputDictionaryFile);
+		SaveDictionaryToFile(dictionary, dictionaryFile);
 		std::cout << "Изменения сохранены. До свидания.\n";
 	}
 	else
@@ -80,8 +79,7 @@ int main(int argc, char* argv[])
 		{
 			return 1;
 		}
-		std::istream& streamInputDictionaryFile = dictionaryFile;
-		FillInDictionaryFromFile(streamInputDictionaryFile, dictionary);
+		FillInDictionaryFromFile(dictionaryFile, dictionary);
 	}
 	else
 	{
