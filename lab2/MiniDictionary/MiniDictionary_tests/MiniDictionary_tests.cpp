@@ -3,40 +3,60 @@
 #include "../MiniDictionary/Dictionary.h"
 
 Dictionary dictionary = {
-	{ "The Red Square", "Красная Площадь" },
+	{ "the red square", "Красная Площадь" },
 	{ "ball", "мяч" },
-	{ "book", "книга" }
+	{ "cat", "кот, кошка" }
 };
 
-TEST_CASE("Translate a line already written in the dictionary")
+TEST_CASE("Words from file must be added to dictionary")
 {
-	std::string lineTranslation = "";
-	REQUIRE(TranslateLine("cat", lineTranslation, dictionary) == false);
-	REQUIRE(lineTranslation == "");
+	std::istringstream streamInput("the red square\nКрасная Площадь\nball\nмяч\ncat\nкот, кошка\n");
+	Dictionary inputDictionary;
 
-	lineTranslation = "";
-	REQUIRE(TranslateLine("book", lineTranslation, dictionary) == true);
-	REQUIRE(lineTranslation == "книга");
-
-	lineTranslation = "";
-	REQUIRE(TranslateLine("The Red Square", lineTranslation, dictionary) == true);
-	REQUIRE(lineTranslation == "Красная Площадь");
+	FillInDictionaryFromFile(streamInput, inputDictionary);
+	REQUIRE(inputDictionary == dictionary);
 }
 
-TEST_CASE("Add lines to dictionary")
+TEST_CASE("Сheck the addition of words to the dictionary")
 {
-	std::string line = "smth";
-	std::string lineTranslation = "";
-	REQUIRE(AddLinesToDictionary(line, lineTranslation, dictionary) == false);
+	std::string line = "word";
+	std::string translation = "";
+	REQUIRE(AddLinesToDictionary(line, translation, dictionary) == false);
 
 	line = "day";
-	lineTranslation = "день";
-	REQUIRE(AddLinesToDictionary(line, lineTranslation, dictionary) == true);
+	translation = "день";
+	REQUIRE(AddLinesToDictionary(line, translation, dictionary) == true);
 }
 
-TEST_CASE("Translate the line written in the dictionary by the program function")
+TEST_CASE("Lines written in the dictionary must be translated")
 {
-	std::string lineTranslation = "";
-	REQUIRE(TranslateLine("day", lineTranslation, dictionary) == true);
-	REQUIRE(lineTranslation == "день");
+	std::string translation = "";
+	REQUIRE(TranslateLine("meat", translation, dictionary) == false);
+	REQUIRE(translation == "");
+
+	translation = "";
+	REQUIRE(TranslateLine("cat", translation, dictionary) == true);
+	REQUIRE(translation == "кот, кошка");
+
+	translation = "";
+	REQUIRE(TranslateLine("bALl", translation, dictionary) == true);
+	REQUIRE(translation == "мяч");
+
+	translation = "";
+	REQUIRE(TranslateLine("The Red Square", translation, dictionary) == true);
+	REQUIRE(translation == "Красная Площадь");
+
+	translation = "";
+	REQUIRE(TranslateLine("day", translation, dictionary) == true);
+	REQUIRE(translation == "день");
 }
+
+TEST_CASE("Words from dictionary must be added to file")
+{
+	std::ostringstream streamOutput;
+	std::ostringstream expectedStreamOutput("ball\nмяч\ncat\nкот, кошка\nday\nдень\nthe red square\nКрасная Площадь\n");
+
+	SaveDictionaryToFile(dictionary, streamOutput);
+	REQUIRE(streamOutput.str() == expectedStreamOutput.str());
+}
+

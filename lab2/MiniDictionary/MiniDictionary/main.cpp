@@ -1,25 +1,8 @@
 ﻿// MiniDictionary.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 #include "Dictionary.h"
-#include <fstream>
 #include <cstdlib>
 #include <windows.h>
-
-bool SaveDictionaryToFile(const Dictionary& dictionary, const std::string& dictionaryFileName)
-{
-	std::ofstream dictionaryFile(dictionaryFileName);
-	for (auto& line : dictionary)
-	{
-		dictionaryFile << line.first << "\n" << line.second << "\n";
-	}
-
-	if (!dictionaryFile.flush())
-	{
-		return false;
-	}
-
-	return true;
-}
 
 bool ConfirmSavingDictionaryToFile(const Dictionary& dictionary, const std::string& dictionaryFileName)
 {
@@ -28,15 +11,10 @@ bool ConfirmSavingDictionaryToFile(const Dictionary& dictionary, const std::stri
 	getline(std::cin, line);
 	if ((line == "Y") || (line == "y"))
 	{
-		if (SaveDictionaryToFile(dictionary, dictionaryFileName))
-		{
-			std::cout << "Изменения сохранены. До свидания.\n";
-		}
-		else
-		{
-			std::cout << "Не удалось записать данные в файл словаря\n";
-			return false;
-		}
+		std::ofstream dictionaryFile(dictionaryFileName);
+		std::ostream& streamOutputDictionaryFile = dictionaryFile;
+		SaveDictionaryToFile(dictionary, streamOutputDictionaryFile);
+		std::cout << "Изменения сохранены. До свидания.\n";
 	}
 	else
 	{
@@ -46,12 +24,12 @@ bool ConfirmSavingDictionaryToFile(const Dictionary& dictionary, const std::stri
 	return true;
 }
 
-void ProcessUnknownWord(const std::string& line, Dictionary& dictionary, bool& dictionaryChanges)
+void ProcessUnknownLine(const std::string& line, Dictionary& dictionary, bool& dictionaryChanges)
 {
-	std::string lineTranslation;
+	std::string translation;
 	std::cout << "Неизвестное слово \"" << line << "\". Введите перевод или пустую строку для отказа." << "\n";
-	getline(std::cin, lineTranslation);
-	if (AddLinesToDictionary(line, lineTranslation, dictionary))
+	getline(std::cin, translation);
+	if (AddLinesToDictionary(line, translation, dictionary))
 	{
 		dictionaryChanges = true;
 	}
@@ -64,7 +42,7 @@ void ProcessUnknownWord(const std::string& line, Dictionary& dictionary, bool& d
 void ProcessInputLines(Dictionary dictionary, const std::string& dictionaryFileName)
 {
 	std::string line;
-	std::string lineTranslation;
+	std::string translation;
 	bool dictionaryChanges = false;
 	while (getline(std::cin, line))
 	{
@@ -76,33 +54,15 @@ void ProcessInputLines(Dictionary dictionary, const std::string& dictionaryFileN
 			}
 			return;
 		}
-		else if (TranslateLine(line, lineTranslation, dictionary))
+		else if (TranslateLine(line, translation, dictionary))
 		{
-			std::cout << lineTranslation << "\n";
+			std::cout << translation << "\n";
 		}
 		else
 		{
-			ProcessUnknownWord(line, dictionary, dictionaryChanges);
+			ProcessUnknownLine(line, dictionary, dictionaryChanges);
 		}
 	}
-}
-
-bool FillInDictionaryFromFile(const std::string& dictionaryFileName, Dictionary& dictionary)
-{
-	std::ifstream dictionaryFile(dictionaryFileName);
-	if (!dictionaryFile.is_open())
-	{
-		return false;
-	}
-
-	std::string firstStr;
-	std::string secondStr;
-	while (getline(dictionaryFile, firstStr) && getline(dictionaryFile, secondStr))
-	{
-		dictionary.emplace(firstStr, secondStr);
-	}
-
-	return true;
 }
 
 int main(int argc, char* argv[])
@@ -115,11 +75,13 @@ int main(int argc, char* argv[])
 	if (argc == 2)
 	{
 		dictionaryFileName = argv[1];
-		if (!FillInDictionaryFromFile(dictionaryFileName, dictionary))
+		std::ifstream dictionaryFile(dictionaryFileName);
+		if (!dictionaryFile.is_open())
 		{
-			std::cout << "Error filling dictionary from file\n";
 			return 1;
 		}
+		std::istream& streamInputDictionaryFile = dictionaryFile;
+		FillInDictionaryFromFile(streamInputDictionaryFile, dictionary);
 	}
 	else
 	{

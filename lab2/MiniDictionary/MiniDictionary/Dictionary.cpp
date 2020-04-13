@@ -1,24 +1,44 @@
 #include "Dictionary.h"
 
-bool AddLinesToDictionary(const std::string& line, std::string& lineTranslation, Dictionary& dictionary)
+void FillInDictionaryFromFile(std::istream& streamInputDictionaryFile, Dictionary& dictionary)
 {
-	if (lineTranslation != "")
+	std::string line;
+	std::string translation;
+	while (getline(streamInputDictionaryFile, line) && getline(streamInputDictionaryFile, translation))
 	{
-		dictionary.emplace(line, lineTranslation);
+		transform(line.begin(), line.end(), line.begin(), tolower);
+		dictionary.emplace(line, translation);
+	}
+}
+
+bool AddLinesToDictionary(std::string line, std::string& translation, Dictionary& dictionary)
+{
+	if (translation != "")
+	{
+		transform(line.begin(), line.end(), line.begin(), tolower);
+		dictionary.emplace(line, translation);
 		return true;
 	}
 	return false;
 }
 
-bool TranslateLine(const std::string& line, std::string& lineTranslation, Dictionary dictionary)
+bool TranslateLine(std::string line, std::string& translation, Dictionary dictionary)
 {
+	transform(line.begin(), line.end(), line.begin(), tolower);
 	Dictionary::iterator it = dictionary.find(line);
 	if (it != dictionary.end())
 	{
-		lineTranslation = it->second;
+		translation = it->second;
 		return true;
 	}
 
 	return false;
 }
 
+void SaveDictionaryToFile(const Dictionary& dictionary, std::ostream& streamOutputDictionaryFile)
+{
+	for (auto& line : dictionary)
+	{
+		streamOutputDictionaryFile << line.first << "\n" << line.second << "\n";
+	}
+}

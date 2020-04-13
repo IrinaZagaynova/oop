@@ -1,8 +1,10 @@
-The Red Square
-Красная Площадь
 ball
 мяч
 book
 книга
 cat
 кот, кошка
+meat
+мясо
+the red square
+Красная Площадь
