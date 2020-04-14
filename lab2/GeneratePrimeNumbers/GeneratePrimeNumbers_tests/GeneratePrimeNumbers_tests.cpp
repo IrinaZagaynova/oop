@@ -1,5 +1,5 @@
 ﻿#define CATCH_CONFIG_MAIN
-#include "../../../../catch2/catch.hpp"
+#include "../../../catch2/catch.hpp"
 #include "../GeneratePrimeNumbers/GeneratePrimeNumbers.h"
 
 bool SetsAreEqual(const std::set<int>& x, const std::set<int>& y)
