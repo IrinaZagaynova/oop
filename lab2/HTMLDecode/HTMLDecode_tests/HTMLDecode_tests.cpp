@@ -8,29 +8,39 @@
 
 TEST_CASE("Decode empty string gives an empty string")
 {
-	REQUIRE(DecodeString("").empty());
+	CHECK(DecodeString("") == "");
 }
 
 TEST_CASE("Does not change a string without special entities")
 {
-	std::string str = "string";
-	REQUIRE(DecodeString(str) == str);
+	std::string str = "&quot amp;";
+	CHECK(DecodeString(str) == str);
 }
 
-TEST_CASE("Decodes a string with one special entity")
+TEST_CASE("Decodes a string with special entities")
 {
 	std::string str = "&quot;";
-	std::string resultStr = "\"";
-	REQUIRE(DecodeString(str) == resultStr);
+	std::string expected = "\"";
+	CHECK(DecodeString(str) == expected);
 
-	str = "123dd&apos;d";
-	resultStr = "123dd'd";
-	REQUIRE(DecodeString(str) == resultStr);
+	str = "&lt;str";
+	expected = "<str";
+	CHECK(DecodeString(str) == expected);
+
+	str = "str&amp;";
+	expected = "str&";
+	CHECK(DecodeString(str) == expected);
+
+	str = "str&apos;str";
+	expected = "str'str";
+	CHECK(DecodeString(str) == expected);
+
+	str = "&amp;lt;";
+	expected = "&lt;";
+	CHECK(DecodeString(str) == expected);
+
+	str = "Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s";
+	expected = "Cat <says> \"Meow\". M&M's";
+	CHECK(DecodeString(str) == expected);
 }
 
-TEST_CASE("Decodes a string with several special entities")
-{
-	std::string str = "Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s";
-	std::string resultStr = "Cat <says> \"Meow\". M&M's";
-	REQUIRE(DecodeString(str) == resultStr);
-}
