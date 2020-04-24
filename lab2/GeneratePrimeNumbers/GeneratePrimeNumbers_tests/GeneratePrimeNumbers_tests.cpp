@@ -22,7 +22,7 @@ TEST_CASE("Check if the argument is a digit within the bounds of the set")
 }
 
 TEST_CASE("Check the generation of a set of prime numbers")
-{
+{ 
 	REQUIRE(SetsAreEqual(GeneratePrimeNumbersSet(1), {}));
 	REQUIRE(SetsAreEqual(GeneratePrimeNumbersSet(2), { 2 }));
 	REQUIRE(SetsAreEqual(GeneratePrimeNumbersSet(7), { 2, 3, 5, 7 }));
