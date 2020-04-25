@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(can_be_turned_off)
 }
 
 // позволяет выбрать канал от 1 до 99
-BOOST_AUTO_TEST_CASE(can_select_channel_from_1_to_99)
+BOOST_AUTO_TEST_CASE(can_select_channel_by_number_from_1_to_99)
 {
 	// Выбираем канал между 1 и 99
 	BOOST_CHECK(tv.SelectChannel(1));
@@ -143,18 +143,6 @@ BOOST_AUTO_TEST_CASE(can_set_channel_name)
 	BOOST_CHECK(!tv.SetChannelName(2, "name"));
 }
 
-BOOST_AUTO_TEST_CASE(can_select_channel_by_name)
-{
-	tv.SetChannelName(10, "tenth channel name");
-	BOOST_CHECK(tv.SelectChannel("tenth channel name"));
-	BOOST_CHECK_EQUAL(tv.GetChannel(), 10);
-
-	BOOST_CHECK(!tv.SelectChannel("no channel with this name"));
-
-	tv.TurnOff();
-	BOOST_CHECK(!tv.SelectChannel("tenth channel name"));
-}
-
 BOOST_AUTO_TEST_CASE(can_delete_channel_name)
 {
 	BOOST_CHECK(!tv.DeleteChannelName("no channel with this name"));
@@ -194,6 +182,18 @@ BOOST_AUTO_TEST_CASE(can_get_channel_by_name)
 
 	tv.TurnOff();
 	BOOST_CHECK_EQUAL(tv.GetChannelByName("20 channel"), 0);
+}
+
+BOOST_AUTO_TEST_CASE(can_select_channel_by_name)
+{
+	tv.SetChannelName(10, "tenth channel name");
+	BOOST_CHECK(tv.SelectChannel("tenth channel name"));
+	BOOST_CHECK_EQUAL(tv.GetChannel(), 10);
+
+	BOOST_CHECK(!tv.SelectChannel("no channel with this name"));
+
+	tv.TurnOff();
+	BOOST_CHECK(!tv.SelectChannel("tenth channel name"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
