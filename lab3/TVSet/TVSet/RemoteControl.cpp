@@ -67,7 +67,7 @@ bool CRemoteControl::Info(std::istream&)
 	m_output << info;
 
 	ChannelNumbersAndNames channelNumbersAndNamesList = m_tv.GetChannelNumbersAndNamesList();
-	for (auto& channel : channelNumbersAndNamesList)
+	for (auto channel : channelNumbersAndNamesList)
 	{
 		m_output << channel.first << " - " << channel.second << endl;
 	}
@@ -90,12 +90,11 @@ bool CRemoteControl::SelectChannel(std::istream& args)
 	{
 		if (m_tv.SelectChannel(str))
 		{
-			m_output << "TV channel changed to " << str << "\n";
+			m_output << "TV channel changed to " << str << endl;
 		}
 		else if (((channel = atoi(str.c_str())) > 0) && (m_tv.SelectChannel(channel)))
 		{
-			m_output << "TV channel changed to " << channel << "\n";
-			
+			m_output << "TV channel changed to " << channel << endl;
 		}
 		else
 		{
