@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "TVSet.h"
 
-ChannelNumbersAndNames CTVSet::GetChannelNumbersAndNamesList()const
+CTVSet::ChannelNumbersAndNames CTVSet::GetChannelNumbersAndNamesList()const
 {
 	return m_channelNumbersAndNames;
 }
@@ -43,15 +43,13 @@ bool CTVSet::SelectPreviousChannel()
 {
 	if (m_isOn)
 	{
-		int channel = m_selectedChannel;
-		m_selectedChannel = m_previousChannel;
-		m_previousChannel = channel;
+		std::swap(m_selectedChannel, m_previousChannel);
 		return true;
 	}
 	return false;
 }
 
-bool CTVSet::SetChannelName(int channel, std::string channelName)
+bool CTVSet::SetChannelName(int channel, const std::string& channelName)
 {
 	if ((channel < 1 || channel > 99) || (channelName == ""))
 	{
@@ -67,7 +65,7 @@ bool CTVSet::SetChannelName(int channel, std::string channelName)
 	return false;
 }
 
-bool CTVSet::DeleteChannelName(std::string channelName)
+bool CTVSet::DeleteChannelName(const std::string& channelName)
 {
 	if (m_isOn)
 	{
@@ -96,7 +94,7 @@ std::string CTVSet::GetChannelName(int channel)const
 	return "";
 }
 
-int CTVSet::GetChannelByName(std::string channelName)const
+int CTVSet::GetChannelByName(const std::string& channelName)const
 {
 	if (m_isOn)
 	{
@@ -111,7 +109,7 @@ int CTVSet::GetChannelByName(std::string channelName)const
 	return 0;
 }
 
-bool CTVSet::SelectChannel(std::string channelName)
+bool CTVSet::SelectChannel(const std::string& channelName)
 {
 	m_previousChannel = m_selectedChannel;
 	int channel = GetChannelByName(channelName);

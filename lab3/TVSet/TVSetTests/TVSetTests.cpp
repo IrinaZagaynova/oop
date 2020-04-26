@@ -5,6 +5,7 @@
 Телевизор
 	изначально выключен
 */
+CTVSet::ChannelNumbersAndNames channelNumbersAndNames;
 
 struct TVSetFixture
 {
@@ -101,17 +102,16 @@ BOOST_AUTO_TEST_CASE(can_select_previous_channel)
 	BOOST_CHECK_EQUAL(tv.GetChannel(), 0);
 }
 
-ChannelNumbersAndNames channelNumbersAndNames;
+ //ChannelNumbersAndNames channelNumbersAndNames;
 
 bool CheckChannelNameAndNumberIsInList(int number, const std::string& channelName)
 {
-	for (auto it = channelNumbersAndNames.begin(); it != channelNumbersAndNames.end();)
+	for (auto it = channelNumbersAndNames.begin(); it != channelNumbersAndNames.end(); it++)
 		{
 			if ((it->first == number) && (it->second == channelName))
 			{
 				return true;
 			}
-			it++;
 		}
 	return false;
 }
@@ -135,9 +135,13 @@ BOOST_AUTO_TEST_CASE(can_set_channel_name)
 	channelNumbersAndNames = tv.GetChannelNumbersAndNamesList();
 	BOOST_CHECK(!CheckChannelNameAndNumberIsInList(10, ""));
 
-	BOOST_CHECK(!tv.SetChannelName(0, ""));
+	BOOST_CHECK(!tv.SetChannelName(0, "channel name"));
 	channelNumbersAndNames = tv.GetChannelNumbersAndNamesList();
 	BOOST_CHECK(!CheckChannelNameAndNumberIsInList(0, ""));
+
+	BOOST_CHECK(!tv.SetChannelName(100, "channel name"));
+	channelNumbersAndNames = tv.GetChannelNumbersAndNamesList();
+	BOOST_CHECK(!CheckChannelNameAndNumberIsInList(100, ""));
 
 	tv.TurnOff();
 	BOOST_CHECK(!tv.SetChannelName(2, "name"));

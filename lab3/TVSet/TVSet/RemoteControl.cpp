@@ -66,7 +66,7 @@ bool CRemoteControl::Info(std::istream&)
 
 	m_output << info;
 
-	ChannelNumbersAndNames channelNumbersAndNamesList = m_tv.GetChannelNumbersAndNamesList();
+	CTVSet::ChannelNumbersAndNames channelNumbersAndNamesList = m_tv.GetChannelNumbersAndNamesList();
 	for (auto channel : channelNumbersAndNamesList)
 	{
 		m_output << channel.first << " - " << channel.second << endl;
