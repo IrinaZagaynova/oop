@@ -34,7 +34,7 @@ struct CalculatorControlFixture : CalculatorControlDependencies
 		BOOST_CHECK_EQUAL(output.str(), expectedOutput);
 	}
 
-	void Execute—ommand(const string& command)
+	void ExecuteCommand(const string& command)
 	{
 		input = stringstream();
 		BOOST_CHECK(input << command);
@@ -45,9 +45,9 @@ struct CalculatorControlFixture : CalculatorControlDependencies
 
 BOOST_FIXTURE_TEST_SUITE(Remote_Control, CalculatorControlFixture)
 
-BOOST_AUTO_TEST_CASE(can_declare_variable_with_the_correct_undeclared_name)
+BOOST_AUTO_TEST_CASE(can_declare_variable_with_correct_undeclared_name)
 {
-	Execute—ommand("var identifier_123");
+	ExecuteCommand("var identifier_123");
 	BOOST_CHECK(calculator.DoesVariablesExist("identifier_123"));
 }
 
@@ -73,12 +73,12 @@ BOOST_AUTO_TEST_CASE(cant_declare_variable_if_command_is_entered_incorrectly)
 BOOST_AUTO_TEST_CASE(can_assign_variable_value_of_variable_or_function)
 {
 	calculator.AssignValueToVariable("x", 10);
-	Execute—ommand("let varX=x");
+	ExecuteCommand("let varX=x");
 	BOOST_CHECK_EQUAL(calculator.GetValueOfVariable("x"), 10);
 
 	calculator.AssignValueToVariable("y", 20);
 	calculator.FunctionDeclaration("fnY", "y");
-	Execute—ommand("let varY=fnY");
+	ExecuteCommand("let varY=fnY");
 	BOOST_CHECK_EQUAL(calculator.GetValueOfVariable("varY"), 20);
 }
 
@@ -110,15 +110,15 @@ BOOST_AUTO_TEST_CASE(cant_assign_value_to_variable_if_its_already_declared)
 BOOST_AUTO_TEST_CASE(can_declare_function_with_correct_undeclared_name)
 {
 	calculator.AssignValueToVariable("x", 10);
-	Execute—ommand("fn fnX=x");
+	ExecuteCommand("fn fnX=x");
 	BOOST_CHECK(calculator.DoesFunctionExist("fnX"));
 	BOOST_CHECK_EQUAL(calculator.GetValueOfFunction("fnX"), 10);
 
-	Execute—ommand("fn XPlusX=x+x");
+	ExecuteCommand("fn XPlusX=x+x");
 	BOOST_CHECK(calculator.DoesFunctionExist("XPlusX"));
 	BOOST_CHECK_EQUAL(calculator.GetValueOfFunction("XPlusX"), 20);
 
-	Execute—ommand("fn XPlusX_Plus_X=XPlusX+x");
+	ExecuteCommand("fn XPlusX_Plus_X=XPlusX+x");
 	BOOST_CHECK(calculator.DoesFunctionExist("XPlusX_Plus_X"));
 	BOOST_CHECK_EQUAL(calculator.GetValueOfFunction("XPlusX_Plus_X"), 30);
 }

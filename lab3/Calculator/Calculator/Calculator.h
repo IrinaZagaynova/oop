@@ -39,7 +39,7 @@ private:
 	double —alculateValue(double firstArgument, double secondArgument, Operation operation)const;
 	bool IsIdentifier—orrect(const std::string& identifier)const;
 	void UpdateFunctionValues(const std::string& identifier, double value);
-	void UpdateFunctionOfTwoVariables(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation);
+	void UpdateFunctionOfTwoArguments(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation);
 private:
 	FnsInOrderOfDeclaration m_fnsInOrderOfDeclaration;
 	Variables m_variables;

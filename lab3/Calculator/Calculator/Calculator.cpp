@@ -175,7 +175,7 @@ double CCalculator::СalculateValue(double firstArgument, double secondArgument,
 	return NAN;
 }
 
-void CCalculator::UpdateFunctionOfTwoVariables(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation)
+void CCalculator::UpdateFunctionOfTwoArguments(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation)
 {
 	double functionValue = СalculateValue(GetValue(firstIdentifier), GetValue(secondIdentifier), operation);
 
@@ -202,7 +202,7 @@ void CCalculator::UpdateFunctionValues(const std::string& identifier, double val
 		}
 		else
 		{
-			UpdateFunctionOfTwoVariables(it->first, it->second.firstIdentifier, it->second.secondIdentifier, it->second.operation);
+			UpdateFunctionOfTwoArguments(it->first, it->second.firstIdentifier, it->second.secondIdentifier, it->second.operation);
 		}
 	}
 }

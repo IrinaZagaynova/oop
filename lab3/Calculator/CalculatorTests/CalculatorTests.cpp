@@ -74,13 +74,16 @@ BOOST_AUTO_TEST_CASE(value_of_variable_doesnt_change_if_value_of_its_argument_ha
 
 BOOST_AUTO_TEST_CASE(can_declare_function_of_one_variable)
 {
-	calculator.AssignValueToVariable("variable", 1.234);
-	BOOST_CHECK(calculator.FunctionDeclaration("functionName", "variable"));
-	double value = calculator.GetValueOfFunction("functionName");
-	BOOST_CHECK_EQUAL(value, 1.234);
+	calculator.DeclareVariable("x");
+	BOOST_CHECK(calculator.FunctionDeclaration("fnX", "x"));
+	BOOST_CHECK(calculator.DoesFunctionExist("fnX"));
+	double value = calculator.GetValueOfFunction("fnX");
+	BOOST_CHECK(isnan(value));
 
-	calculator.AssignValueToVariable("variable", 10);
-	value = calculator.GetValueOfFunction("functionName");
+	calculator.AssignValueToVariable("x", 10);
+	BOOST_CHECK(calculator.FunctionDeclaration("function", "fnX"));
+	BOOST_CHECK(calculator.DoesFunctionExist("function"));
+	value = calculator.GetValueOfFunction("function");
 	BOOST_CHECK_EQUAL(value, 10);
 }
 
