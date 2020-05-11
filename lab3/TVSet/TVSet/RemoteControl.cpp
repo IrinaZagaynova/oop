@@ -160,7 +160,7 @@ bool CRemoteControl::DeleteChannelName(istream& args)
 	}
 	else
 	{
-		m_output << "Ñhannel " << channelName << " has been deleted\n";
+		m_output << "Channel " << channelName << " has been deleted\n";
 	}
 
 	return true;
