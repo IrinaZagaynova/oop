@@ -143,9 +143,9 @@ BOOST_AUTO_TEST_CASE(can_delete_channel_name_when_tv_is_on_and_entered_name_was_
 {
 	tv.TurnOn();
 	tv.SetChannelName(10, "some name");
-	VerifyCommandHandling("DeleteChannelName some name", 1, "Сhannel some name has been deleted\n");
+	VerifyCommandHandling("DeleteChannelName some name", 1, "Channel some name has been deleted\n");
 	tv.SetChannelName(10, "some name");
-	VerifyCommandHandling("DeleteChannelName  some  name  ", 1, "Сhannel some name has been deleted\n");
+	VerifyCommandHandling("DeleteChannelName some name", 1, "Channel some name has been deleted\n");
 }
 
 BOOST_AUTO_TEST_CASE(cant_delete_channel_name_when_tv_is_turned_off)
