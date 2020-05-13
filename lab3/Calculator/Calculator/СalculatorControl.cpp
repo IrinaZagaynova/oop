@@ -62,7 +62,7 @@ bool CCalculatorControl::DeclareVariable(std::istream& args)
 	return true;
 }
 
-bool ÑanStringBeConvertedToDouble(const string& line)
+bool CanStringBeConvertedToDouble(const string& line)
 {
 	for (char ch : line)
 	{
@@ -89,7 +89,7 @@ bool ParseAssignValueToVariableCommand(const string& line, string& name, string&
 
 	if (results[1] != ptrEnd)
 	{
-		if (!ÑanStringBeConvertedToDouble(results[1]))
+		if (!CanStringBeConvertedToDouble(results[1]))
 		{
 			return false;
 		}
