@@ -7,12 +7,12 @@ using namespace std;
 int main()
 {
 	CCalculator calculator;
-	CCalculatorControl CalculatorControl(calculator, cin, cout);
+	CCalculatorControl calculatorControl(calculator, cin, cout);
 
 	while (!cin.eof() && !cin.fail())
 	{
 		cout << "> ";
-		if (!CalculatorControl.HandleCommand())
+		if (!calculatorControl.HandleCommand())
 		{
 			cout << "Unknown command!" << endl;
 		}
