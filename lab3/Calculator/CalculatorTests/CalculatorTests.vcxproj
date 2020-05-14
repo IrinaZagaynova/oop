@@ -171,7 +171,6 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CalculatorTests.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
