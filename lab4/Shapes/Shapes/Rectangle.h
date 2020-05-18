@@ -12,7 +12,7 @@ public:
 	uint32_t GetFillColor()const override;
 	double GetWidth()const;
 	double GetHeight()const;
-	CPoint GettopLeftCorner()const;
+	CPoint GetTopLeftCorner()const;
 	CPoint GetBottomRightCorner()const;
 private:
 	CPoint m_topLeftCorner;

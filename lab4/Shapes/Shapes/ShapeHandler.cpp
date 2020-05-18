@@ -110,7 +110,7 @@ bool IsColor(const string& line)
 	return true;
 }
 
-bool —heck—orrectnessOfShapeParameters(const vector<string>& params, size_t colorsStartPosition)
+bool CheckCorrectnessOfShapeParameters(const vector<string>& params, size_t colorsStartPosition)
 {
 	for (size_t i = 0; i < params.size(); i++)
 	{
@@ -142,7 +142,7 @@ bool CShapeHandler::CreateLineSegment(std::istream& args)
 	boost::algorithm::trim(line);
 	boost::split(params, line, boost::algorithm::is_any_of(" "));
 	
-	if (params.size() != 5 || !—heck—orrectnessOfShapeParameters(params, 4))
+	if (params.size() != 5 || !CheckCorrectnessOfShapeParameters(params, 4))
 	{
 		m_output << "Command entered incorrectly\n";
 		return true;
@@ -166,7 +166,7 @@ bool CShapeHandler::CreateTriangle(istream& args)
 	boost::algorithm::trim(line);
 	boost::split(params, line, boost::algorithm::is_any_of(" "));
 
-	if (params.size() != 8 || !—heck—orrectnessOfShapeParameters(params, 6))
+	if (params.size() != 8 || !CheckCorrectnessOfShapeParameters(params, 6))
 	{
 		m_output << "Command entered incorrectly\n";
 		return true;
@@ -192,7 +192,7 @@ bool CShapeHandler::CreateRectangle(istream& args)
 	boost::algorithm::trim(line);
 	boost::split(params, line, boost::algorithm::is_any_of(" "));
 
-	if (params.size() != 6 || !—heck—orrectnessOfShapeParameters(params, 4))
+	if (params.size() != 6 || !CheckCorrectnessOfShapeParameters(params, 4))
 	{
 		m_output << "Command entered incorrectly\n";
 		return true;
@@ -218,7 +218,7 @@ bool CShapeHandler::CreateCircle(istream& args)
 	boost::algorithm::trim(line);
 	boost::split(params, line, boost::algorithm::is_any_of(" "));
 
-	if (params.size() != 5 || !—heck—orrectnessOfShapeParameters(params, 3))
+	if (params.size() != 5 || !CheckCorrectnessOfShapeParameters(params, 3))
 	{
 		m_output << "Command entered incorrectly\n";
 		return true;

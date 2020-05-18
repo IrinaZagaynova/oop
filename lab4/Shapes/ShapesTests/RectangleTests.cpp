@@ -3,14 +3,14 @@
 
 struct Rectangle_
 {
-	const CPoint expectedtopLeftCorner = { 5, 2 };
+	const CPoint expectedTopLeftCorner = { 5, 2 };
 	const double expectedWidth = 8;
 	const double expectedHeight = 5;
 	const uint32_t expectedOutlineColor = std::stoul("ff0000", 0, 16);
 	const uint32_t expectedFillColor = std::stoul("00ff00", 0, 16);
 	const CRectangle rectangle;
 	Rectangle_()
-		: rectangle(expectedtopLeftCorner, expectedWidth, expectedHeight, expectedOutlineColor, expectedFillColor)
+		: rectangle(expectedTopLeftCorner, expectedWidth, expectedHeight, expectedOutlineColor, expectedFillColor)
 	{}
 };
 
@@ -58,14 +58,14 @@ BOOST_AUTO_TEST_CASE(has_a_perimeter)
 
 BOOST_AUTO_TEST_CASE(has_a_coordinates_top_left_corner)
 {
-	BOOST_CHECK_EQUAL(rectangle.GettopLeftCorner().m_x, expectedtopLeftCorner.m_x);
-	BOOST_CHECK_EQUAL(rectangle.GettopLeftCorner().m_y, expectedtopLeftCorner.m_y);
+	BOOST_CHECK_EQUAL(rectangle.GetTopLeftCorner().m_x, expectedTopLeftCorner.m_x);
+	BOOST_CHECK_EQUAL(rectangle.GetTopLeftCorner().m_y, expectedTopLeftCorner.m_y);
 }
 
 BOOST_AUTO_TEST_CASE(has_a_coordinates_bottom_right_corner)
 {
-	BOOST_CHECK_EQUAL(rectangle.GetBottomRightCorner().m_x, expectedtopLeftCorner.m_x + expectedWidth);
-	BOOST_CHECK_EQUAL(rectangle.GetBottomRightCorner().m_y, expectedtopLeftCorner.m_y - expectedHeight);
+	BOOST_CHECK_EQUAL(rectangle.GetBottomRightCorner().m_x, expectedTopLeftCorner.m_x + expectedWidth);
+	BOOST_CHECK_EQUAL(rectangle.GetBottomRightCorner().m_y, expectedTopLeftCorner.m_y - expectedHeight);
 }
 
 BOOST_AUTO_TEST_CASE(can_be_converted_to_string)

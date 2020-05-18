@@ -53,7 +53,7 @@ double CRectangle::GetHeight()const
 	return m_height;
 }
 
-CPoint CRectangle::GettopLeftCorner() const
+CPoint CRectangle::GetTopLeftCorner() const
 {
 	return m_topLeftCorner;
 }
