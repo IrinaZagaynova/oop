@@ -4,5 +4,5 @@
 class ISolidShape : public IShape
 {
 public:
-	uint32_t virtual GetFillColor()const=0;
+	uint32_t virtual GetFillColor()const = 0;
 };
