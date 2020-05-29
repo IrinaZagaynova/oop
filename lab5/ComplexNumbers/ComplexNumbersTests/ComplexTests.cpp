@@ -177,11 +177,16 @@ TEST_CASE("== сompares a complex numbers with a complex number")
 {
 	CComplex C(5, 10);
 	CHECK(C == A);
+
+	CHECK(!(A == B));
 }
 
 TEST_CASE("!= must check complex numbers for the inequality")
 {
 	CHECK(A != B);
+
+	CComplex A(5, 10);
+	CHECK(!(A != A));
 }
 
 TEST_CASE("Input operator should read a complex numbers")
@@ -194,6 +199,15 @@ TEST_CASE("Input operator should read a complex numbers")
 	(std::stringstream)"4+2i" >> C;
 	CHECK(C.Re() == 4);
 	CHECK(C.Im() == 2);
+}
+
+TEST_CASE("If complex number failed to read, stream has a failbit state")
+{
+	CComplex C;
+	std::stringstream strm;
+	strm << "4+2";
+	strm >> C;
+	CHECK(strm.fail());
 }
 
 TEST_CASE("Output operator should print a complex number")
