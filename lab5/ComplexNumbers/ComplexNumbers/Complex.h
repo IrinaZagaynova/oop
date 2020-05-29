@@ -31,5 +31,5 @@ CComplex const operator -(CComplex const& complex1, CComplex const& complex2);
 CComplex const operator *(CComplex const& complex1, CComplex const& complex2);
 CComplex const operator /(CComplex const& complex1, CComplex const& complex2);
 
-std::ostream& operator <<(std::ostream& os, CComplex const& complex);
-std::istream& operator >>(std::istream& is, CComplex& complex);
+std::ostream& operator <<(std::ostream& stream, CComplex const& complex);
+std::istream& operator >>(std::istream& stream, CComplex& complex);
