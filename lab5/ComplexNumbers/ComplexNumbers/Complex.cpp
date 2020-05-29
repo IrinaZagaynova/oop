@@ -78,29 +78,29 @@ bool CComplex::operator ==(CComplex const& other) const
 
 bool CComplex::operator !=(CComplex const& other) const
 {
-	return (!(fabs(m_real - other.Re()) < DBL_EPSILON || fabs(m_image - other.Im()) < DBL_EPSILON));
+	return !(*this == other);
 }
 
-std::ostream& operator <<(std::ostream& os, CComplex const& complex)
+std::ostream& operator <<(std::ostream& stream, CComplex const& complex)
 {
-	os << complex.Re() << std::showpos << complex.Im() << "i";
-	return os;
+	stream << complex.Re() << std::showpos << complex.Im() << "i";
+	return stream;
 }
 
-std::istream& operator >>(std::istream& is, CComplex& complex)
+std::istream& operator >>(std::istream& stream, CComplex& complex)
 {
 	double re;
 	double im;
-	if ((is >> re) && (is >> im) && (is.get() == 'i'))
+	if ((stream >> re) && (stream >> im) && (stream.get() == 'i'))
 	{
 		complex = CComplex(re, im);
 	}
 	else
 	{		
-		is.setstate(std::ios_base::failbit);
+		stream.setstate(std::ios_base::failbit);
 	}
 
-	return is;
+	return stream;
 }
 
 double CComplex::Re() const
