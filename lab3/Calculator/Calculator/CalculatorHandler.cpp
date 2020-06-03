@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CalculatorControl.h"
+#include "CalculatorHandler.h"
 #include "Calculator.h"
 #include "boost/algorithm/string.hpp"
 #include <iomanip>
@@ -15,26 +15,31 @@ struct PartsOfFunction
 	Operation operation;
 };
 
-CCalculatorControl::CCalculatorControl(CCalculator& calculator, std::istream& input, std::ostream& output)
+CCalculatorHandler::CCalculatorHandler(CCalculator& calculator, std::istream& input, std::ostream& output)
 	: m_calculator(calculator)
 	, m_input(input)
 	, m_output(output)
 	, m_actionMap({
-			{ "var", bind(&CCalculatorControl::DeclareVariable, this, _1) },
-			{ "let", bind(&CCalculatorControl::AssignValueToVariable, this, _1) },
-			{ "fn", bind(&CCalculatorControl::FunctionDeclaration, this, _1) },
-			{ "print", bind(&CCalculatorControl::PrintIdentifierValue, this, _1) },
-			{ "printvars", bind(&CCalculatorControl::PrintVars, this, _1) },
-			{ "printfns", bind(&CCalculatorControl::PrintFns, this, _1) },
+			{ "var", bind(&CCalculatorHandler::DeclareVariable, this, _1) },
+			{ "let", bind(&CCalculatorHandler::AssignValueToVariable, this, _1) },
+			{ "fn", bind(&CCalculatorHandler::DeclareFunction, this, _1) },
+			{ "print", bind(&CCalculatorHandler::PrintIdentifierValue, this, _1) },
+			{ "printvars", bind(&CCalculatorHandler::PrintVars, this, _1) },
+			{ "printfns", bind(&CCalculatorHandler::PrintFns, this, _1) },
 		})
 {
 }
 
-bool CCalculatorControl::HandleCommand()
+bool CCalculatorHandler::HandleCommand()
 {
 	string commandLine;
 	getline(m_input, commandLine);
 	istringstream strm(commandLine);
+
+	if (cin.eof())
+	{
+		return true;
+	}
 
 	string action;
 	strm >> action;
@@ -48,7 +53,7 @@ bool CCalculatorControl::HandleCommand()
 	return false;
 }
 
-bool CCalculatorControl::DeclareVariable(std::istream& args)
+bool CCalculatorHandler::DeclareVariable(std::istream& args)
 {
 	string line;
 	getline(args, line);
@@ -103,7 +108,7 @@ bool ParseAssignValueToVariableCommand(const string& line, string& name, string&
 	return true;
 }
 
-bool CCalculatorControl::AssignValueToVariable(istream& args)
+bool CCalculatorHandler::AssignValueToVariable(istream& args)
 {
 	string line;
 	string name;
@@ -154,7 +159,7 @@ optional<Operation> GetOperation(char operationSymbol)
 	return nullopt;
 }
 
-bool ParseFunctionDeclarationCommand(const string& line, PartsOfFunction& function)
+bool ParseDeclareFunctionCommand(const string& line, PartsOfFunction& function)
 {
 	vector<string> results;
 	boost::split(results, line, boost::algorithm::is_any_of("=+-/*"));
@@ -186,23 +191,23 @@ bool ParseFunctionDeclarationCommand(const string& line, PartsOfFunction& functi
 	return false;
 }
 
-bool CCalculatorControl::FunctionDeclaration(std::istream& args)
+bool CCalculatorHandler::DeclareFunction(std::istream& args)
 {
 	string line;
 	args >> line;
 	PartsOfFunction function;
 	
-	if (!ParseFunctionDeclarationCommand(line, function))
+	if (!ParseDeclareFunctionCommand(line, function))
 	{
 		m_output << "Failed to declare function\n";
 		return true;
 	}
 
-	if (function.operation == Operation::noAction && m_calculator.FunctionDeclaration(function.name, function.firstIdentifier))
+	if (function.operation == Operation::noAction && m_calculator.DeclareFunction(function.name, function.firstIdentifier))
 	{
 		return true;
 	}
-	else if (m_calculator.FunctionDeclaration(function.name, function.firstIdentifier, function.secondIdentifier, function.operation))
+	else if (m_calculator.DeclareFunction(function.name, function.firstIdentifier, function.secondIdentifier, function.operation))
 	{
 		return true;
 	}
@@ -212,7 +217,7 @@ bool CCalculatorControl::FunctionDeclaration(std::istream& args)
 	return true;
 }
 
-bool CCalculatorControl::PrintIdentifierValue(std::istream& args)
+bool CCalculatorHandler::PrintIdentifierValue(std::istream& args)
 {
 	string name;
 	args >> name;
@@ -236,7 +241,7 @@ bool CCalculatorControl::PrintIdentifierValue(std::istream& args)
 	return true;
 }
 
-bool CCalculatorControl::PrintVars(std::istream&)
+bool CCalculatorHandler::PrintVars(std::istream&)
 {
 	CCalculator::Variables variables;
 	variables = m_calculator.GetVariablesList();
@@ -256,7 +261,7 @@ bool CCalculatorControl::PrintVars(std::istream&)
 	return true;
 }
 
-bool CCalculatorControl::PrintFns(std::istream&)
+bool CCalculatorHandler::PrintFns(std::istream&)
 {
 	CCalculator::Functions functions;
 	functions = m_calculator.GetFunctionsList();

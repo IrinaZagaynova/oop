@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "Calculator.h"
-#include "CalculatorControl.h"
+#include "CalculatorHandler.h"
 
 using namespace std;
 
 int main()
 {
 	CCalculator calculator;
-	CCalculatorControl calculatorControl(calculator, cin, cout);
+	CCalculatorHandler CalculatorHandler(calculator, cin, cout);
 
 	while (!cin.eof() && !cin.fail())
 	{
 		cout << "> ";
-		if (!calculatorControl.HandleCommand())
+		if (!CalculatorHandler.HandleCommand())
 		{
 			cout << "Unknown command!" << endl;
 		}

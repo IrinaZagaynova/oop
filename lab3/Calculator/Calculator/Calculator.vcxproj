@@ -153,12 +153,12 @@
   <ItemGroup>
     <ClCompile Include="Calculator.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="СalculatorControl.cpp" />
+    <ClCompile Include="CalculatorHandler.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculator.h" />
-    <ClInclude Include="CalculatorControl.h" />
+    <ClInclude Include="CalculatorHandler.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

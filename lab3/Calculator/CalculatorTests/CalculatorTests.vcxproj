@@ -164,10 +164,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Calculator\Calculator.cpp" />
-    <ClCompile Include="..\Calculator\СalculatorControl.cpp" />
+    <ClCompile Include="..\Calculator\CalculatorHandler.cpp" />
     <ClCompile Include="CalculatorTests.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="CalculatorControlTests.cpp" />
+    <ClCompile Include="CalculatorHandlerTests.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>

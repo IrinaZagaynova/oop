@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../Calculator/CalculatorControl.h"
+#include "../Calculator/CalculatorHandler.h"
 #include "../Calculator/Calculator.h"
 #include <sstream>
 #include <boost/optional.hpp>
@@ -17,10 +17,10 @@ struct CalculatorControlDependencies
 
 struct CalculatorControlFixture : CalculatorControlDependencies
 {
-	CCalculatorControl CalculatorControl;
+	CCalculatorHandler CalculatorHandler;
 
 	CalculatorControlFixture()
-		: CalculatorControl(calculator, input, output)
+		: CalculatorHandler(calculator, input, output)
 	{
 	}
 
@@ -29,7 +29,7 @@ struct CalculatorControlFixture : CalculatorControlDependencies
 		output = stringstream();
 		input = stringstream();
 		BOOST_CHECK(input << command);
-		BOOST_CHECK(CalculatorControl.HandleCommand());
+		BOOST_CHECK(CalculatorHandler.HandleCommand());
 		BOOST_CHECK(input.eof());
 		BOOST_CHECK_EQUAL(output.str(), expectedOutput);
 	}
@@ -38,7 +38,7 @@ struct CalculatorControlFixture : CalculatorControlDependencies
 	{
 		input = stringstream();
 		BOOST_CHECK(input << command);
-		BOOST_CHECK(CalculatorControl.HandleCommand());
+		BOOST_CHECK(CalculatorHandler.HandleCommand());
 		BOOST_CHECK(input.eof());
 	}
 };
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(can_assign_variable_value_of_variable_or_function)
 	BOOST_CHECK_EQUAL(calculator.GetValueOfVariable("x"), 10);
 
 	calculator.AssignValueToVariable("y", 20);
-	calculator.FunctionDeclaration("fnY", "y");
+	calculator.DeclareFunction("fnY", "y");
 	ExecuteCommand("let varY=fnY");
 	BOOST_CHECK_EQUAL(calculator.GetValueOfVariable("varY"), 20);
 }
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(can_print_value_of_variable_or_function_if_it_was_declared)
 	calculator.AssignValueToVariable("x", 1.235);
 	VerifyCommandHandling("print x", "1.24\n");
 
-	calculator.FunctionDeclaration("fnX", "x");	
+	calculator.DeclareFunction("fnX", "x");	
 	VerifyCommandHandling("print fnX", "1.24\n");
 }
 
@@ -170,9 +170,9 @@ BOOST_AUTO_TEST_CASE(can_print_names_and_values_of_functions)
 {
 	calculator.DeclareVariable("x");
 	calculator.AssignValueToVariable("y", 1.236);
-	calculator.FunctionDeclaration("fnX", "x");
-	calculator.FunctionDeclaration("fnY", "y");
-	calculator.FunctionDeclaration("fnA", "y", "fnY", Operation::addition);
+	calculator.DeclareFunction("fnX", "x");
+	calculator.DeclareFunction("fnY", "y");
+	calculator.DeclareFunction("fnA", "y", "fnY", Operation::addition);
 
 	VerifyCommandHandling("printfns", "fnA:2.47\nfnX:nan\nfnY:1.24\n");
 }

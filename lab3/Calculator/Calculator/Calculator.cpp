@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Calculator.h"
 
-bool CCalculator::IsIdentifierСorrect(const std::string& identifier)const
+bool CCalculator::IsIdentifierCorrect(const std::string& identifier)const
 {
 	if (!isascii(identifier[0]) || identifier.empty() || isdigit(identifier[0]))
 	{
@@ -31,7 +31,7 @@ bool CCalculator::DoesVariablesExist(const std::string& name)const
 
 bool CCalculator::DeclareVariable(const std::string& identifier)
 {
-	if (DoesVariablesExist(identifier) || DoesFunctionExist(identifier) || !IsIdentifierСorrect(identifier))
+	if (DoesVariablesExist(identifier) || DoesFunctionExist(identifier) || !IsIdentifierCorrect(identifier))
 	{
 		return false;
 	}
@@ -85,7 +85,7 @@ bool CCalculator::AssignValueToVariable(const std::string& identifier, double va
 	}
 	else
 	{
-		if (!IsIdentifierСorrect(identifier))
+		if (!IsIdentifierCorrect(identifier))
 		{
 			return false;
 		}
@@ -98,7 +98,7 @@ bool CCalculator::AssignValueToVariable(const std::string& identifier, double va
 
 bool CCalculator::AssignValueToVariable(const std::string& variable, const std::string& identifier)
 {
-	if (!IsIdentifierСorrect(variable) || (!DoesVariablesExist(identifier) && !DoesFunctionExist(identifier)))
+	if (!IsIdentifierCorrect(variable) || (!DoesVariablesExist(identifier) && !DoesFunctionExist(identifier)))
 	{
 		return false;
 	}
@@ -110,9 +110,9 @@ bool CCalculator::AssignValueToVariable(const std::string& variable, const std::
 	return true;
 }
 
-bool CCalculator::FunctionDeclaration(const std::string& name, const std::string& identifier)
+bool CCalculator::DeclareFunction(const std::string& name, const std::string& identifier)
 {
-	if (!IsIdentifierСorrect(name) || DoesVariablesExist(name) || DoesFunctionExist(name))
+	if (!IsIdentifierCorrect(name) || DoesVariablesExist(name) || DoesFunctionExist(name))
 	{
 		return false;
 	}
@@ -130,31 +130,7 @@ bool CCalculator::FunctionDeclaration(const std::string& name, const std::string
 	return true;
 }
 
-bool CCalculator::FunctionDeclaration(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation)
-{
-	if (!IsIdentifierСorrect(name) || DoesVariablesExist(name) || DoesFunctionExist(name))
-	{
-		return false;
-	}
-
-	if (!(DoesVariablesExist(firstIdentifier) || DoesFunctionExist(firstIdentifier)) 
-		|| !(DoesVariablesExist(secondIdentifier) || DoesFunctionExist(secondIdentifier)))
-	{
-		return false;
-	}
-
-	double firstIdentifierValue = GetValue(firstIdentifier);
-	double secondIdentifierValue = GetValue(secondIdentifier);
-
-	double value = СalculateValue(firstIdentifierValue, secondIdentifierValue, operation);
-	Function function = { firstIdentifier, secondIdentifier, operation, value };
-	m_functions.emplace(name, function);
-	m_fnsInOrderOfDeclaration.push_back(name);
-
-	return true;
-}
-
-double CCalculator::СalculateValue(double firstArgument, double secondArgument, Operation operation)const
+double CalculateValue(double firstArgument, double secondArgument, Operation operation)
 {
 	if (isnan(secondArgument) || isnan(secondArgument))
 	{
@@ -175,9 +151,34 @@ double CCalculator::СalculateValue(double firstArgument, double secondArgument,
 	return NAN;
 }
 
+bool CCalculator::DeclareFunction(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation)
+{
+	if (!IsIdentifierCorrect(name) || DoesVariablesExist(name) || DoesFunctionExist(name))
+	{
+		return false;
+	}
+
+	if (!(DoesVariablesExist(firstIdentifier) || DoesFunctionExist(firstIdentifier)) 
+		|| !(DoesVariablesExist(secondIdentifier) || DoesFunctionExist(secondIdentifier)))
+	{
+		return false;
+	}
+
+	double firstIdentifierValue = GetValue(firstIdentifier);
+	double secondIdentifierValue = GetValue(secondIdentifier);
+
+	double value = CalculateValue(firstIdentifierValue, secondIdentifierValue, operation);
+	Function function = { firstIdentifier, secondIdentifier, operation, value };
+	m_functions.emplace(name, function);
+	m_fnsInOrderOfDeclaration.push_back(name);
+
+	return true;
+}
+
+
 void CCalculator::UpdateFunctionOfTwoArguments(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation)
 {
-	double functionValue = СalculateValue(GetValue(firstIdentifier), GetValue(secondIdentifier), operation);
+	double functionValue = CalculateValue(GetValue(firstIdentifier), GetValue(secondIdentifier), operation);
 
 	auto it = m_functions.find(name);
 	it->second.value = functionValue;
@@ -196,6 +197,12 @@ void CCalculator::UpdateFunctionValues(const std::string& identifier, double val
 	for (auto name : m_fnsInOrderOfDeclaration)
 	{
 		auto it = m_functions.find(name);
+
+		if (it == m_functions.end())
+		{
+			return;
+		}
+
 		if (it->second.secondIdentifier == "")
 		{
 			it->second.value = GetValue(it->second.firstIdentifier);

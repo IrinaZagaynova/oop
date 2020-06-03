@@ -25,8 +25,8 @@ public:
 	bool DeclareVariable(const std::string& identifier);
 	bool AssignValueToVariable(const std::string& identifier, double value);
 	bool AssignValueToVariable(const std::string& identifier, const std::string& value);
-	bool FunctionDeclaration(const std::string& name, const std::string& identifier);
-	bool FunctionDeclaration(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation);
+	bool DeclareFunction(const std::string& name, const std::string& identifier);
+	bool DeclareFunction(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation);
 	bool DoesFunctionExist(const std::string& name)const;
 	bool DoesVariablesExist(const std::string& name)const;
 	double GetValueOfVariable(const std::string& name)const;
@@ -35,13 +35,12 @@ public:
 	Variables GetVariablesList()const;
 	Functions GetFunctionsList()const;
 private:
-	typedef std::vector<std::string> FnsInOrderOfDeclaration;
-	double —alculateValue(double firstArgument, double secondArgument, Operation operation)const;
-	bool IsIdentifier—orrect(const std::string& identifier)const;
+	typedef std::vector<std::string> FunctionsNames;
+	bool IsIdentifierCorrect(const std::string& identifier)const;
 	void UpdateFunctionValues(const std::string& identifier, double value);
 	void UpdateFunctionOfTwoArguments(const std::string& name, const std::string& firstIdentifier, const std::string& secondIdentifier, Operation operation);
 private:
-	FnsInOrderOfDeclaration m_fnsInOrderOfDeclaration;
+	FunctionsNames m_fnsInOrderOfDeclaration;
 	Variables m_variables;
 	Functions m_functions;
 };

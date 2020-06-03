@@ -27,10 +27,10 @@
     <ClCompile Include="..\Calculator\Calculator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="CalculatorControlTests.cpp">
+    <ClCompile Include="CalculatorHandlerTests.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\Calculator\СalculatorControl.cpp">
+    <ClCompile Include="..\Calculator\CalculatorHandler.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
