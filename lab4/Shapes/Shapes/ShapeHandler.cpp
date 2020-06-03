@@ -51,7 +51,7 @@ void CShapeHandler::PrintShapeWithMaxArea()const
 		return;
 	}
 
-	auto shape = std::max_element(m_shapesList.begin(), m_shapesList.end(), [](std::shared_ptr<IShape> sh1, std::shared_ptr<IShape> sh2) {
+	auto shape = std::max_element(m_shapesList.begin(), m_shapesList.end(), [](const std::shared_ptr<IShape>& sh1, const std::shared_ptr<IShape>& sh2) {
 		return sh1->GetArea() < sh2->GetArea();
 		});
 
@@ -67,7 +67,7 @@ void CShapeHandler::PrintShapeWithMinPerimeter()const
 		return;
 	}
 
-	auto shape = std::min_element(m_shapesList.begin(), m_shapesList.end(), [](std::shared_ptr<IShape> sh1, std::shared_ptr<IShape> sh2) {
+	auto shape = std::min_element(m_shapesList.begin(), m_shapesList.end(), [](const std::shared_ptr<IShape>& sh1, const std::shared_ptr<IShape>& sh2) {
 		return sh1->GetPerimeter() < sh2->GetPerimeter();
 		});
 
