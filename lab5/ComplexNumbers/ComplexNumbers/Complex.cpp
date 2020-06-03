@@ -29,7 +29,7 @@ CComplex const operator /(CComplex const& complex1, CComplex const& complex2)
 {
 	if (complex2.Re() == 0 && complex2.Im() == 0)
 	{
-		throw std::exception("Error. Division by 0.\n");
+		throw std::invalid_argument("Division by 0");
 	}
 
 	double re = (complex1.Re() * complex2.Re() + complex1.Im() * complex2.Im()) / (pow(complex2.Re(), 2) + pow(complex2.Im(), 2));
