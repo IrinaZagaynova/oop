@@ -8,24 +8,24 @@ CComplex::CComplex(double real, double image)
 {
 }
 
-CComplex const operator +(CComplex const& complex1, CComplex const& complex2)
+CComplex const operator +(const CComplex& complex1, const CComplex& complex2)
 {
 	return CComplex(complex1.Re() + complex2.Re(), complex1.Im() + complex2.Im());;
 }
 
-CComplex const operator -(CComplex const& complex1, CComplex const& complex2)
+CComplex const operator -(const CComplex& complex1, const CComplex& complex2)
 {
 	return CComplex(complex1.Re() - complex2.Re(), complex1.Im() - complex2.Im());
 }
 
-CComplex const operator *(CComplex const& complex1, CComplex const& complex2)
+CComplex const operator *(const CComplex& complex1, const CComplex& complex2)
 {
 	double re = complex1.Re() * complex2.Re() - complex1.Im() * complex2.Im();
 	double im = complex1.Re() * complex2.Im() + complex1.Im() * complex2.Re();
 	return CComplex(re, im);
 }
 
-CComplex const operator /(CComplex const& complex1, CComplex const& complex2)
+CComplex const operator /(const CComplex& complex1, const CComplex& complex2)
 {
 	if (complex2.Re() == 0 && complex2.Im() == 0)
 	{
@@ -47,41 +47,41 @@ CComplex const CComplex::operator -() const
 	return CComplex(-m_real, -m_image);
 }
 
-CComplex& CComplex::operator +=(CComplex const& complex2)
+CComplex& CComplex::operator +=(const CComplex& complex2)
 {
 	*this = *this + complex2;
 	return *this;
 }
 
-CComplex& CComplex::operator -=(CComplex const& complex2)
+CComplex& CComplex::operator -=(const CComplex& complex2)
 {
 	*this = *this - complex2;
 	return *this;
 }
 
-CComplex& CComplex::operator *=(CComplex const& complex2)
+CComplex& CComplex::operator *=(const CComplex& complex2)
 {
 	*this = *this * complex2;
 	return *this;
 }
 
-CComplex& CComplex::operator /=(CComplex const& complex2)
+CComplex& CComplex::operator /=(const CComplex& complex2)
 {	
 	*this = *this / complex2;
 	return *this;
 }
 
-bool CComplex::operator ==(CComplex const& other) const
+bool CComplex::operator ==(const CComplex& other) const
 {
 	return (fabs(m_real - other.Re()) < DBL_EPSILON && fabs(m_image - other.Im()) < DBL_EPSILON);
 }
 
-bool CComplex::operator !=(CComplex const& other) const
+bool CComplex::operator !=(const CComplex& other) const
 {
 	return !(*this == other);
 }
 
-std::ostream& operator <<(std::ostream& stream, CComplex const& complex)
+std::ostream& operator <<(std::ostream& stream, const CComplex& complex)
 {
 	stream << complex.Re() << std::showpos << complex.Im() << "i";
 	return stream;
