@@ -13,23 +13,23 @@ public:
 	CComplex const operator +()const;
 	CComplex const operator -()const;
 
-	CComplex& operator +=(CComplex const& complex2);
-	CComplex& operator -=(CComplex const& complex2);
-	CComplex& operator *=(CComplex const& complex2);
-	CComplex& operator /=(CComplex const& complex2);
+	CComplex& operator +=(const CComplex& complex2);
+	CComplex& operator -=(const CComplex& complex2);
+	CComplex& operator *=(const CComplex& complex2);
+	CComplex& operator /=(const CComplex& complex2);
 
-	bool operator ==(CComplex const& other)const;
-	bool operator !=(CComplex const& other)const;
+	bool operator ==(const CComplex& other)const;
+	bool operator !=(const CComplex& other)const;
 
 private:
 	double m_real;
 	double m_image;
 };
 
-CComplex const operator +(CComplex const& complex1, CComplex const& complex2);
-CComplex const operator -(CComplex const& complex1, CComplex const& complex2);
-CComplex const operator *(CComplex const& complex1, CComplex const& complex2);
-CComplex const operator /(CComplex const& complex1, CComplex const& complex2);
+CComplex const operator +(const CComplex& complex1, const CComplex& complex2);
+CComplex const operator -(const CComplex& complex1, const CComplex& complex2);
+CComplex const operator *(const CComplex& complex1, const CComplex& complex2);
+CComplex const operator /(const CComplex& complex1, const CComplex& complex2);
 
-std::ostream& operator <<(std::ostream& stream, CComplex const& complex);
+std::ostream& operator <<(std::ostream& stream, const CComplex& complex);
 std::istream& operator >>(std::istream& stream, CComplex& complex);
