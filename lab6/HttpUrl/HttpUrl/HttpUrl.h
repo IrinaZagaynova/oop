@@ -26,13 +26,14 @@ public:
 	std::string GetURL()const;
 	std::string GetDomain()const;
 	std::string GetDocument()const;
+	std::string GetProtocolStr()const;
 	Protocol GetProtocol()const;
 	unsigned short GetPort()const;
 private:
-	unsigned short GetDefaultPort(const Protocol& protocol);
-	Protocol GetProtocol(std::string protocol);
-	std::string GetDocument(const std::string& document);
-	unsigned short GetPort(const std::string& port, const Protocol& protocol);
+	Protocol GetProtocol(std::string protocol)const;
+	unsigned short GetDefaultPort(const Protocol& protocol)const;
+	std::string GetDocument(const std::string& document)const;
+	unsigned short GetPort(const std::string& port, const Protocol& protocol)const;
 private:
 	std::string m_domain;
 	std::string m_document;

@@ -9,8 +9,8 @@ int main()
 	{ 
 		try
 		{
-			CHttpUrl url("domain.com", "index.html", Protocol::HTTPS, 65536);
-			std::cout << "protocol - " << url.GetProtocol() << "\n"
+			CHttpUrl url(line);
+			std::cout << "protocol - " << url.GetProtocolStr() << "\n"
 				<< "domain - " << url.GetDomain() << "\n"
 				<< "document - " << url.GetDocument() << "\n"
 				<< "port - " << url.GetPort() << "\n"

@@ -6,7 +6,7 @@
 const unsigned short HTTP_DEFAULT_PORT = 80;
 const unsigned short HTTPS_DEFAULT_PORT = 443;
 const unsigned short MAX_PORT = 65535;
-const unsigned short MIN_PORT = 1;
+const unsigned short MIN_PORT = 0;
 
 CHttpUrl::CHttpUrl(std::string const& url)
 {
@@ -38,17 +38,11 @@ CHttpUrl::CHttpUrl(std::string const& domain, std::string const& document, Proto
 
     m_domain = domain;
     m_document = CHttpUrl::GetDocument(document);
-    m_protocol = protocol;
-
-    if (port == 0)
-    {
-        throw std::invalid_argument("Invalid port");
-    }
-
+    m_protocol = protocol;    
     m_port = port;
 }
 
-Protocol CHttpUrl::GetProtocol(std::string protocolStr)
+Protocol CHttpUrl::GetProtocol(std::string protocolStr) const
 {
     std::transform(protocolStr.begin(), protocolStr.end(), protocolStr.begin(), tolower);
 
@@ -77,7 +71,7 @@ bool IsNumber(const std::string& line)
     return true;
 }
 
-unsigned short CHttpUrl::GetPort(const std::string& portStr, const Protocol& protocol)
+unsigned short CHttpUrl::GetPort(const std::string& portStr, const Protocol& protocol) const
 {
     if (portStr.empty())
     {
@@ -98,7 +92,7 @@ unsigned short CHttpUrl::GetPort(const std::string& portStr, const Protocol& pro
     return port;
 }
 
-unsigned short CHttpUrl::GetDefaultPort(const Protocol& protocol)
+unsigned short CHttpUrl::GetDefaultPort(const Protocol& protocol) const
 {
     switch (protocol)
     {
@@ -111,7 +105,7 @@ unsigned short CHttpUrl::GetDefaultPort(const Protocol& protocol)
     return 0;
 }
 
-std::string CHttpUrl::GetDocument(const std::string& document)
+std::string CHttpUrl::GetDocument(const std::string& document) const
 {
     if (document.empty() || document[0] != '/')
     {
@@ -156,6 +150,11 @@ std::string CHttpUrl::GetDocument() const
 Protocol CHttpUrl::GetProtocol() const
 {
     return m_protocol;
+}
+
+std::string CHttpUrl::GetProtocolStr() const
+{
+    return СonvertProtocolToString(m_protocol);
 }
 
 unsigned short CHttpUrl::GetPort() const
