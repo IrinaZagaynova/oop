@@ -114,9 +114,9 @@ std::string CHttpUrl::GetDocument(const std::string& document) const
     return document;
 }
 
-std::string ConvertProtocolToString(const Protocol& protocol)
+std::string CHttpUrl::GetProtocolStr() const
 {
-    switch (protocol)
+    switch (m_protocol)
     {
     case Protocol::HTTP:
         return "http";
@@ -131,10 +131,10 @@ std::string CHttpUrl::GetURL() const
 {
     if (m_port == HTTP_DEFAULT_PORT || m_port == HTTPS_DEFAULT_PORT)
     {
-        return ConvertProtocolToString(m_protocol) + "://" + m_domain + m_document;
+        return GetProtocolStr() + "://" + m_domain + m_document;
     }
  
-    return ConvertProtocolToString(m_protocol) + "://" + m_domain + ":" + std::to_string(m_port) + m_document;
+    return GetProtocolStr() + "://" + m_domain + ":" + std::to_string(m_port) + m_document;
 }
 
 std::string CHttpUrl::GetDomain() const
@@ -150,11 +150,6 @@ std::string CHttpUrl::GetDocument() const
 Protocol CHttpUrl::GetProtocol() const
 {
     return m_protocol;
-}
-
-std::string CHttpUrl::GetProtocolStr() const
-{
-    return ConvertProtocolToString(m_protocol);
 }
 
 unsigned short CHttpUrl::GetPort() const
