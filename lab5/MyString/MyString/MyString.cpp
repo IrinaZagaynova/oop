@@ -121,7 +121,8 @@ bool CMyString::operator!=(const CMyString& other) const
 
 bool CMyString::operator<(const CMyString& other) const
 {
-	for (size_t i = 0; i < std::min(m_length, other.GetLength()); i++)
+	size_t minLength = std::min(m_length, other.GetLength());
+	for (size_t i = 0; i < minLength; i++)
 	{
 		if (this->m_pString[i] < other.m_pString[i])
 		{
@@ -160,4 +161,18 @@ char const CMyString::operator[](size_t position) const
 char& CMyString::operator[](size_t position)
 {
 	return m_pString[position];
+}
+
+std::ostream& operator<<(std::ostream& stream, CMyString const& str)
+{
+	stream << str.GetStringData();
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, CMyString& str)
+{
+	std::string input;
+	stream >> input;
+	str = CMyString(input);
+	return stream;
 }

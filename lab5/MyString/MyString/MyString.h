@@ -35,3 +35,6 @@ private:
 	char* m_pString;
 	size_t m_length;
 };
+
+std::ostream& operator <<(std::ostream& stream, CMyString const& str);
+std::istream& operator >>(std::istream& stream, CMyString& str);

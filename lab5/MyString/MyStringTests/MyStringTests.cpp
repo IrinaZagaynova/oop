@@ -214,3 +214,19 @@ TEST_CASE("[] can get indexed access to string characters for writing")
 	str[3] = '1';
 	CHECK(str[3] == '1');
 }
+
+TEST_CASE("<< can print СMyString objects")
+{
+	CMyString str("line");
+	std::stringstream strm;
+	strm << str;
+	CHECK(strm.str() == "line");
+}
+
+TEST_CASE(">> can read СMyString objects")
+{
+	CMyString str;
+	(std::stringstream)"line" >> str;
+	CHECK(str.GetStringData() == std::string("line"));
+	CHECK(str.GetLength() == 4);
+}
