@@ -10,7 +10,7 @@ const unsigned short MIN_PORT = 0;
 
 CHttpUrl::CHttpUrl(std::string const& url)
 {
-    std::regex ex("([^ #?]*)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)");
+    std::regex ex("^(\\w+)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)");
     std::cmatch match;
 
     if (!regex_match(url.c_str(), match, ex))
