@@ -75,6 +75,18 @@ BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_which_pars_url)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+template <typename Ex>
+void ExpectConstructorFailure(
+	const std::string& domain,
+	const std::string& document,
+	const Protocol& protocol,
+	const std::string& expectedDescription)
+{
+	ExpectException<Ex>([&] {
+		CHttpUrl url(domain, document, protocol);
+		}, expectedDescription);
+}
+
 BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_that_gets_protocol_domain_and_document)
 
 	BOOST_AUTO_TEST_CASE(constructor_can_initialize_url_params_by_domain_document_and_protocol)
@@ -94,10 +106,23 @@ BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_that_gets_protocol_domain_and_doc
 
 	BOOST_AUTO_TEST_CASE(if_the_domain_is_empty_throws_an_exception)
 	{
-		BOOST_CHECK_THROW(CHttpUrl url("", "index.html", Protocol::HTTPS), std::invalid_argument);
+		ExpectConstructorFailure<std::invalid_argument>("", "index.html", Protocol::HTTPS, "Invalid domain");
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
+
+template <typename Ex>
+void ExpectConstructorFailure(
+	const std::string& domain,
+	const std::string& document,
+	const Protocol& protocol,
+	unsigned short port,
+	const std::string& expectedDescription)
+{
+	ExpectException<Ex>([&] {
+		CHttpUrl url(domain, document, protocol, port);
+		}, expectedDescription);
+}
 
 BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_that_gets_protocol_domain_document_and_port)	
 	
@@ -109,7 +134,7 @@ BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_that_gets_protocol_domain_documen
 
 	BOOST_AUTO_TEST_CASE(if_the_domain_is_empty_throws_an_exception)
 	{
-		BOOST_CHECK_THROW(CHttpUrl url("", "index.html", Protocol::HTTPS), std::invalid_argument);
+		ExpectConstructorFailure<std::invalid_argument>("", "index.html", Protocol::HTTPS, 100, "Invalid domain");
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
