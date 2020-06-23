@@ -4,8 +4,9 @@
 
 CMyString::CMyString()
 {
-	m_pString = nullptr;
 	m_length = 0;
+	m_pString = new char[1];
+	m_pString[0] = '\0';
 }
 
 CMyString::CMyString(const char* pString)
@@ -29,8 +30,9 @@ CMyString::CMyString(CMyString const& other)
 CMyString::CMyString(CMyString&& other) noexcept
 	: CMyString(other)
 {
-	other.m_pString = nullptr;
 	other.m_length = 0;
+	other.m_pString = new char[1];
+	other.m_pString[0] = '\0';
 }
 
 CMyString::CMyString(const std::string& stlString)

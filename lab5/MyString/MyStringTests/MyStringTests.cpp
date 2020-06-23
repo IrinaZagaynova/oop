@@ -5,7 +5,7 @@
 TEST_CASE("Can create СMyString object")
 {
 	CMyString str;
-	CHECK(str.GetStringData() == nullptr);
+	CHECK(str.GetStringData() == std::string(""));
 	CHECK(str.GetLength() == 0);
 }
 
