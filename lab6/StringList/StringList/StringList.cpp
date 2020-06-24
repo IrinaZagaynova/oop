@@ -1,8 +1,16 @@
 #include "stdafx.h"
 #include "StringList.h"
 #include <cassert>
+#include <stdexcept>
 
 using namespace std;
+
+CStringList::CStringList()
+{
+	m_firstNode = nullptr;
+	m_lastNode = nullptr;
+	m_size = 0;
+}
 
 CStringList::CStringList(const CStringList& list)
 {
@@ -17,7 +25,7 @@ CStringList::CStringList(const CStringList& list)
 CStringList::CStringList(CStringList&& list) noexcept
 {
 	m_size = list.m_size; 
-	m_firstNode = std::move(list.m_firstNode);
+	m_firstNode = move(list.m_firstNode);
 	m_lastNode = list.m_lastNode; 
 	list.m_firstNode = nullptr;
 	list.m_lastNode = nullptr;
@@ -61,6 +69,24 @@ void CStringList::PushFront(const string& data)
 	++m_size;
 }
 
+void CStringList::Insert(const CStringList::CIterator& iter, const string& data)
+{
+	if (m_size == 0 || iter == end())
+	{
+		PushBack(data);
+	}
+	else if (iter == begin())
+	{
+		m_firstNode->data = data;
+	}
+	else
+	{
+		auto newNode = make_unique<Node>(data, iter.m_node->prev, move(iter.m_node->prev->next));
+		newNode->next->prev = newNode.get();
+		newNode->prev->next = move(newNode);
+	}
+}
+
 CStringList& CStringList::operator=(const CStringList& other)
 {
 	if (*this != other)
@@ -80,7 +106,7 @@ CStringList& CStringList::operator=(CStringList&& other) noexcept
 	if (*this != other)
 	{
 		m_size = other.m_size;
-		m_firstNode = std::move(other.m_firstNode);
+		m_firstNode = move(other.m_firstNode);
 		m_lastNode = other.m_lastNode;
 		other.m_firstNode = nullptr;
 		other.m_lastNode = nullptr;
@@ -114,7 +140,6 @@ bool CStringList::operator!=(const CStringList& other) const
 
 CStringList::CIterator CStringList::begin()
 {
-
 	return CIterator(m_firstNode.get());
 }
 
@@ -144,7 +169,7 @@ const CStringList::CIterator CStringList::end() const
 
 CStringList::CIterator CStringList::rbegin()
 {
-	return CIterator(m_lastNode);
+	return CIterator(m_lastNode, true);
 }
 
 CStringList::CIterator CStringList::rend()
@@ -153,12 +178,12 @@ CStringList::CIterator CStringList::rend()
 	{
 		return rbegin();
 	}
-	return CIterator(m_firstNode->prev);
+	return CIterator(m_firstNode->prev, true);
 }
 
 const CStringList::CIterator CStringList::rbegin() const
 {
-	return  CIterator(m_lastNode);
+	return  CIterator(m_lastNode, true);
 }
 
 const CStringList::CIterator CStringList::rend() const
@@ -167,33 +192,14 @@ const CStringList::CIterator CStringList::rend() const
 	{
 		return rbegin();
 	}
-	return CIterator(m_firstNode->prev);
-}
-
-void CStringList::Insert(const CStringList::CIterator& iter, const std::string& data)
-{
-	if (iter == begin())
-	{
-		PushFront(data);
-	}
-	else if (iter == end())
-	{
-		PushBack(data);
-	}
-	else 
-	{
-		auto newNode = std::make_unique<Node>(data, iter.m_node->prev, std::move(iter.m_node->prev->next));  
-		newNode->next->prev = newNode.get(); 
-		newNode->prev->next = std::move(newNode);  
-		m_size++;
-	}
+	return CIterator(m_firstNode->prev, true);
 }
 
 void CStringList::Delete(const CStringList::CIterator& iter)
-{	
-	if (!iter.m_node)
+{
+	if (!iter.m_node || iter == end() || iter == rend())
 	{
-		throw exception();
+		throw runtime_error("The element can't be deleted");
 	}
 
 	if (m_size == 1)
@@ -205,6 +211,11 @@ void CStringList::Delete(const CStringList::CIterator& iter)
 	{
 		m_firstNode = move(iter.m_node->next);
 		m_firstNode->prev = nullptr;
+	}
+	else if (iter.m_node == m_lastNode)
+	{
+		m_lastNode = iter.m_node->prev;
+		m_lastNode->next = nullptr;
 	}
 	else
 	{
@@ -222,38 +233,38 @@ void CStringList::Clear()
 	}
 }
 
-std::string& CStringList::GetBackElement()
+string& CStringList::GetBackElement()
 {
 	if (!m_lastNode)
 	{
-		throw exception();
+		throw runtime_error("The list is empty");
 	}
 	return m_lastNode->data;
 }
 
-std::string const& CStringList::GetBackElement() const
+string const& CStringList::GetBackElement() const
 {
 	if (!m_lastNode)
 	{
-		throw exception();
+		throw runtime_error("The list is empty");
 	}
 	return m_lastNode->data;
 }
 
-std::string& CStringList::GetFrontElement()
+string& CStringList::GetFrontElement()
 {
 	if (!m_firstNode)
 	{
-		throw exception();
+		throw runtime_error("The list is empty");
 	}
 	return m_firstNode->data;
 }
 
-std::string const& CStringList::GetFrontElement() const
+string const& CStringList::GetFrontElement() const
 {
 	if (!m_firstNode)
 	{
-		throw exception();
+		throw runtime_error("The list is empty");
 	}
 	return m_firstNode->data;
 }
@@ -263,7 +274,7 @@ CStringList::CIterator::CIterator(Node* node, bool isReverse)
 {
 }
 
-std::string& CStringList::CIterator::operator*() const
+string& CStringList::CIterator::operator*() const
 {
 	return m_node->data;
 }

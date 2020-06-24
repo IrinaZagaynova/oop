@@ -16,7 +16,7 @@ class CStringList
 		std::unique_ptr<Node> next;
 	};
 public:
-	CStringList() = default;
+	CStringList();
 	CStringList(const CStringList& list); 
 	CStringList(CStringList&& list) noexcept;
 	~CStringList();
