@@ -71,19 +71,20 @@ void CStringList::PushFront(const string& data)
 
 void CStringList::Insert(const CStringList::CIterator& iter, const string& data)
 {
-	if (m_size == 0 || iter == end())
+	if (iter == begin())
+	{
+		PushFront(data);
+	}
+	else if (iter == end())
 	{
 		PushBack(data);
-	}
-	else if (iter == begin())
-	{
-		m_firstNode->data = data;
 	}
 	else
 	{
 		auto newNode = make_unique<Node>(data, iter.m_node->prev, move(iter.m_node->prev->next));
 		newNode->next->prev = newNode.get();
 		newNode->prev->next = move(newNode);
+		++m_size;
 	}
 }
 

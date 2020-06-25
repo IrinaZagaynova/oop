@@ -164,7 +164,6 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 		{
 			list.PushBack("first");
 			list.PushBack("second");
-			list.PushBack("third");
 		};
 	};
 
@@ -174,12 +173,10 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			CStringList copy;
 			copy.PushBack("first");
 			copy.PushBack("second");
-			copy.PushBack("third");
 			BOOST_CHECK(list == copy);
 			CStringList notCopy;
 			copy.PushBack("first");
 			copy.PushBack("hello");
-			copy.PushBack("third");
 			BOOST_CHECK(!(list == notCopy));
 		}
 		BOOST_AUTO_TEST_CASE(sting_lists_can_be_checked_for_inequality)
@@ -187,36 +184,54 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			CStringList notCopy;
 			notCopy.PushBack("first");
 			notCopy.PushBack("hello");
-			notCopy.PushBack("third");
 			BOOST_CHECK(list != notCopy);
 			CStringList copy;
 			copy.PushBack("first");
 			copy.PushBack("second");
-			copy.PushBack("third");
 			BOOST_CHECK(!(list != copy));
 		}
 
-		BOOST_AUTO_TEST_SUITE(insert)
-			BOOST_AUTO_TEST_CASE(can_insert_an_element_using_begin_iterator)
+		BOOST_AUTO_TEST_SUITE(insert_an_element_to_iterator_position)
+			BOOST_AUTO_TEST_CASE(can_insert_an_element_to_the_start_position_when_the_list_is_empty)
 			{
-				list.Insert(list.begin(), "new");
+				CStringList emptyList;
+				emptyList.Insert(emptyList.begin(), "new");
+				BOOST_CHECK_EQUAL(emptyList.GetSize(), 1);
+				BOOST_CHECK_EQUAL(emptyList.GetFrontElement(), "new");
+				BOOST_CHECK_EQUAL(emptyList.GetBackElement(), "new");
+			}
+			BOOST_AUTO_TEST_CASE(can_insert_an_element_to_the_start_position_when_the_list_isnt_empty)
+			{
+				auto iter = list.begin();
+				list.Insert(iter, "new");
 				BOOST_CHECK_EQUAL(list.GetSize(), 3);
 				BOOST_CHECK_EQUAL(list.GetFrontElement(), "new");
 			}
-			BOOST_AUTO_TEST_CASE(can_insert_an_element_using_end_iterator)
+			BOOST_AUTO_TEST_CASE(can_insert_an_element_to_the_end_position_when_the_list_is_empty)
+			{
+				CStringList emptyList;
+				emptyList.Insert(emptyList.end(), "new");
+				BOOST_CHECK_EQUAL(emptyList.GetSize(), 1);
+				BOOST_CHECK_EQUAL(emptyList.GetFrontElement(), "new");
+				BOOST_CHECK_EQUAL(emptyList.GetBackElement(), "new");
+			}
+			BOOST_AUTO_TEST_CASE(can_insert_an_element_to_the_end_position_when_the_list_isnt_empty)
 			{
 				auto iter = list.end();
-				list.Insert(iter, "hello");
-				BOOST_CHECK(list.GetBackElement() == "hello");
+				list.Insert(iter, "new");
+				BOOST_CHECK_EQUAL(list.GetSize(), 3);
+				BOOST_CHECK_EQUAL(list.GetBackElement(), "new");
 			}
-			BOOST_AUTO_TEST_CASE(can_insert_an_element_at_the_middle_of_the_list)
+			BOOST_AUTO_TEST_CASE(can_insert_an_element_to_the_middle_of_the_list)
 			{
 				auto iter = list.begin();
 				++iter;
-				list.Insert(iter, "new");	
-				BOOST_CHECK_EQUAL(list.GetSize(), 3);
-				list.Delete(list.begin());
-				BOOST_CHECK_EQUAL(list.GetFrontElement(), "new");
+				list.Insert(iter, "new");
+				CStringList expected;
+				expected.PushBack("first");
+				expected.PushBack("new");
+				expected.PushBack("second");
+				BOOST_CHECK(list == expected);
 			}
 		BOOST_AUTO_TEST_SUITE_END()
 
@@ -225,26 +240,24 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			{
 				auto iter = list.begin();
 				list.Delete(iter);
-				BOOST_CHECK(list.GetSize() == 2);
+				BOOST_CHECK(list.GetSize() == 1);
 				CStringList expected;
 				expected.PushBack("second");
-				expected.PushBack("third");
 				BOOST_CHECK(list == expected);
 			}
 			BOOST_AUTO_TEST_CASE(can_delete_last_element)
 			{
 				auto iter = list.begin();
 				++iter;
-				++iter;
 				list.Delete(iter);
-				BOOST_CHECK(list.GetSize() == 2);
+				BOOST_CHECK(list.GetSize() == 1);
 				CStringList expected;
 				expected.PushBack("first");
-				expected.PushBack("second");
 				BOOST_CHECK(list == expected);
 			}
 			BOOST_AUTO_TEST_CASE(can_delete_an_element_from_the_middle_of_the_list)
 			{
+				list.PushBack("third");
 				auto iter = list.begin();
 				++iter;
 				list.Delete(iter);
