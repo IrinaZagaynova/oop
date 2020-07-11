@@ -3,27 +3,27 @@
 #include "../FindMaxEx/Sportsman.h"
 
 BOOST_AUTO_TEST_SUITE(FindMax_)
-	BOOST_AUTO_TEST_CASE(cant_get_the_max_element_in_an_empty_array)
+	BOOST_AUTO_TEST_CASE(cant_find_the_max_element_in_an_empty_array)
 	{
 		std::vector<int> numbers = {};
 		int max = 0;
 		BOOST_CHECK(!FindMax(numbers, max, Less<int>));
 	}
-	BOOST_AUTO_TEST_CASE(can_get_the_max_element_in_an_array_of_int)
+	BOOST_AUTO_TEST_CASE(can_find_the_max_element_in_an_array_of_int)
 	{
 		std::vector<int> numbers = { 5, 9, 3, -7 };
 		int max = 0;
 		BOOST_CHECK(FindMax(numbers, max, Less<int>));
 		BOOST_CHECK_EQUAL(max, 9);
 	}
-	BOOST_AUTO_TEST_CASE(can_get_the_max_element_in_an_array_of_double)
+	BOOST_AUTO_TEST_CASE(can_find_the_max_element_in_an_array_of_double)
 	{
 		std::vector<double> numbers = { 5.2, 9.1, 3, -7.6 };
 		double max = 0;
 		BOOST_CHECK(FindMax(numbers, max, Less<double>));
 		BOOST_CHECK_EQUAL(max, 9.1);
 	}
-	BOOST_AUTO_TEST_CASE(can_get_the_max_element_in_an_array_of_string)
+	BOOST_AUTO_TEST_CASE(can_find_the_max_element_in_an_array_of_string)
 	{
 		std::vector<std::string> strings = { "abc", "ba", "ab" };
 		std::string max = "";
@@ -52,12 +52,12 @@ BOOST_AUTO_TEST_SUITE(FindMax_)
 	}
 
 	BOOST_FIXTURE_TEST_SUITE(FindMaxSportsman, SportsmansFixture_)
-		BOOST_AUTO_TEST_CASE(can_get_a_sportsman_with_max_height)
+		BOOST_AUTO_TEST_CASE(can_find_a_sportsman_with_max_height)
 		{	
 			BOOST_CHECK(FindMax(sportsmans, max, LessHeight));
 			VerifySportsman(s2, max);
 		}
-		BOOST_AUTO_TEST_CASE(can_get_a_sportsman_with_max_weight)
+		BOOST_AUTO_TEST_CASE(can_find_a_sportsman_with_max_weight)
 		{
 			BOOST_CHECK(FindMax(sportsmans, max, LessWeight));
 			VerifySportsman(s3, max);
