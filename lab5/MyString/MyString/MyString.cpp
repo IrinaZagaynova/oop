@@ -59,7 +59,7 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 {
 	if (start > m_length)
 	{
-		throw std::exception("Out of range");
+		return "";
 	}
 	
 	if (start + length > m_length)
@@ -82,13 +82,27 @@ CMyString const CMyString::operator=(const CMyString& other)
 {
 	if (this != &other)
 	{
-		delete[] m_pString;
-		m_length = other.m_length;
-		m_pString = new char[m_length + 1];
-		memcpy(m_pString, other.m_pString, m_length);
-		m_pString[m_length] = '\0';
+		CMyString tmp(other);
+		std::swap(m_pString, tmp.m_pString);
+		std::swap(m_length, tmp.m_length);
 	}
 
+	return *this;
+}
+
+CMyString const CMyString::operator=(CMyString&& other) noexcept
+{
+	if (this != &other)
+	{
+		delete[] m_pString;
+		m_length = other.m_length;
+		m_pString = other.m_pString;
+
+		other.m_length = 0;
+		other.m_pString = new char[1];
+		other.m_pString[0] = '\0';
+	}
+	
 	return *this;
 }
 
@@ -167,7 +181,10 @@ char& CMyString::operator[](size_t position)
 
 std::ostream& operator<<(std::ostream& stream, CMyString const& str)
 {
-	stream << str.GetStringData();
+	for (size_t i = 0; i < str.GetLength(); i++)
+	{
+		stream << str[i];
+	}
 	return stream;
 }
 

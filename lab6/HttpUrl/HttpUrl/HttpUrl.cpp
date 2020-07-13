@@ -42,7 +42,7 @@ CHttpUrl::CHttpUrl(std::string const& domain, std::string const& document, Proto
     m_port = port;
 }
 
-Protocol CHttpUrl::GetProtocol(std::string protocolStr) const
+Protocol CHttpUrl::GetProtocol(std::string protocolStr)
 {
     std::transform(protocolStr.begin(), protocolStr.end(), protocolStr.begin(), tolower);
 
@@ -71,7 +71,7 @@ bool IsNumber(const std::string& line)
     return true;
 }
 
-unsigned short CHttpUrl::GetPort(const std::string& portStr, const Protocol& protocol) const
+unsigned short CHttpUrl::GetPort(const std::string& portStr, const Protocol& protocol)
 {
     if (portStr.empty())
     {
@@ -92,7 +92,7 @@ unsigned short CHttpUrl::GetPort(const std::string& portStr, const Protocol& pro
     return port;
 }
 
-unsigned short CHttpUrl::GetDefaultPort(const Protocol& protocol) const
+unsigned short CHttpUrl::GetDefaultPort(const Protocol& protocol)
 {
     switch (protocol)
     {
@@ -105,7 +105,7 @@ unsigned short CHttpUrl::GetDefaultPort(const Protocol& protocol) const
     return 0;
 }
 
-std::string CHttpUrl::GetDocument(const std::string& document) const
+std::string CHttpUrl::GetDocument(const std::string& document)
 {
     if (document.empty() || document[0] != '/')
     {

@@ -17,6 +17,7 @@ public:
 	void Clear();
 
 	CMyString const operator =(const CMyString& other);
+	CMyString const operator =(CMyString&& other) noexcept;
 
 	friend CMyString const operator +(const CMyString& str1, const CMyString& str2);
 

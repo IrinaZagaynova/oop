@@ -30,10 +30,10 @@ public:
 	Protocol GetProtocol()const;
 	unsigned short GetPort()const;
 private:
-	Protocol GetProtocol(std::string protocol)const;
-	unsigned short GetDefaultPort(const Protocol& protocol)const;
-	std::string GetDocument(const std::string& document)const;
-	unsigned short GetPort(const std::string& port, const Protocol& protocol)const;
+	static Protocol GetProtocol(std::string protocol);
+	static unsigned short GetDefaultPort(const Protocol& protocol);
+	static std::string GetDocument(const std::string& document);
+	static unsigned short GetPort(const std::string& port, const Protocol& protocol);
 private:
 	std::string m_domain;
 	std::string m_document;

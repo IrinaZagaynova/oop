@@ -47,8 +47,11 @@ BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_which_pars_url)
 
 	BOOST_AUTO_TEST_CASE(constructor_can_parse_url_with_protocol_domain_document_and_port)
 	{
-		CHttpUrl url("https://example.com:65535/index.html");
-		VerifyHttpUrlParams(url, "example.com", "/index.html", Protocol::HTTPS, 65535);
+		CHttpUrl url1("https://example.com:65535/index.html");
+		VerifyHttpUrlParams(url1, "example.com", "/index.html", Protocol::HTTPS, 65535);
+
+		CHttpUrl url2("https://example.com:0/index.html");
+		VerifyHttpUrlParams(url2, "example.com", "/index.html", Protocol::HTTPS, 0);
 	}
 
 	BOOST_AUTO_TEST_CASE(if_url_cant_be_parsed_throws_an_exception)
@@ -128,8 +131,11 @@ BOOST_AUTO_TEST_SUITE(tests_of_the_constructor_that_gets_protocol_domain_documen
 	
 	BOOST_AUTO_TEST_CASE(constructor_can_initialize_url_params_by_domain_document_protocol_and_port)
 	{
-		CHttpUrl url("example.com", "/index.html", Protocol::HTTP, 65534);
-		VerifyHttpUrlParams(url, "example.com", "/index.html", Protocol::HTTP, 65534);
+		CHttpUrl url1("example.com", "/index.html", Protocol::HTTP, 65535);
+		VerifyHttpUrlParams(url1, "example.com", "/index.html", Protocol::HTTP, 65535);
+
+		CHttpUrl url2("example.com", "/index.html", Protocol::HTTP, 0);
+		VerifyHttpUrlParams(url2, "example.com", "/index.html", Protocol::HTTP, 0);
 	}
 
 	BOOST_AUTO_TEST_CASE(if_the_domain_is_empty_throws_an_exception)

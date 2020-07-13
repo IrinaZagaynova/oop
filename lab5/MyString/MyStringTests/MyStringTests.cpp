@@ -43,7 +43,7 @@ TEST_CASE("Can create СMyString object from a std::string")
 	CHECK(myString.GetLength() == 6);
 }
 
-TEST_CASE("СMyString object can be copied")
+TEST_CASE("СMyString object has a copy constructor")
 {
 	CMyString str("line");
 	CMyString copy(str);
@@ -51,7 +51,26 @@ TEST_CASE("СMyString object can be copied")
 	CHECK(str.GetLength() == copy.GetLength());
 }
 
-TEST_CASE("Can return a substring from a given position no longer than length characters")
+TEST_CASE("СMyString object has a copy operator")
+{
+	CMyString str = "line";
+	CMyString copy(str);
+	CHECK(std::string(str.GetStringData()) == std::string(copy.GetStringData()));
+	CHECK(str.GetLength() == copy.GetLength());
+}
+
+TEST_CASE("СMyString object can be moved")
+{
+	CMyString str("line");
+	CMyString copy(str);
+	CMyString newStr = std::move(str);
+	CHECK(std::string(newStr.GetStringData()) == std::string(copy.GetStringData()));
+	CHECK(newStr.GetLength() == copy.GetLength());
+	CHECK(std::string(str.GetStringData()) == std::string(""));
+	CHECK(str.GetLength() == 0);
+}
+
+TEST_CASE("Can return a substring from a given position")
 {
 	CMyString str("some line");
 	CMyString result = str.SubString(0, 5);
@@ -65,6 +84,10 @@ TEST_CASE("Can return a substring from a given position no longer than length ch
 	result = str.SubString(5, 15);
 	CHECK(result.GetStringData() == std::string("line"));
 	CHECK(result.GetLength() == 4);
+
+	result = str.SubString(15, 5);
+	CHECK(result.GetStringData() == std::string(""));
+	CHECK(result.GetLength() == 0);
 }
 
 TEST_CASE("Clear() can clear CMyString object")
